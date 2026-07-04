@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-04 21:43:50",
+  "updated_at": "2026-07-04 22:00:35",
   "stocks": [
     {
       "code": "7203",
@@ -11,7 +11,8 @@
       "per": 9.58,
       "debt_ratio": 0.409,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "低PER＋黒字"
     },
     {
       "code": "6758",
@@ -23,7 +24,8 @@
       "per": 19.72,
       "debt_ratio": 0.106,
       "profit_status": "red",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "財務健全"
     },
     {
       "code": "9432",
@@ -35,7 +37,8 @@
       "per": 11.59,
       "debt_ratio": 0.362,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "低PER＋黒字"
     },
     {
       "code": "8306",
@@ -47,7 +50,8 @@
       "per": 15.67,
       "debt_ratio": 0.081,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "市場平均よりやや低PER＋財務健全＋黒字"
     },
     {
       "code": "6861",
@@ -57,9 +61,10 @@
       "open_price": 79000.0,
       "close_price": 80300.0,
       "per": 43.67,
-      "debt_ratio": null,
+      "debt_ratio": 0.0,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "無借金＋黒字"
     },
     {
       "code": "9983",
@@ -71,7 +76,8 @@
       "per": 54.35,
       "debt_ratio": 0.133,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "財務健全＋黒字"
     },
     {
       "code": "8035",
@@ -81,9 +87,10 @@
       "open_price": 69940.0,
       "close_price": 73200.0,
       "per": 58.48,
-      "debt_ratio": null,
+      "debt_ratio": 0.0,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "無借金＋黒字"
     },
     {
       "code": "6098",
@@ -95,7 +102,8 @@
       "per": 34.25,
       "debt_ratio": 0.067,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "財務健全＋黒字"
     },
     {
       "code": "4063",
@@ -107,7 +115,8 @@
       "per": 27.55,
       "debt_ratio": 0.043,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "財務健全＋黒字"
     },
     {
       "code": "9984",
@@ -119,7 +128,8 @@
       "per": 7.07,
       "debt_ratio": 0.42,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "低PER＋黒字"
     },
     {
       "code": "7974",
@@ -129,9 +139,10 @@
       "open_price": 7347.0,
       "close_price": 7132.0,
       "per": 19.57,
-      "debt_ratio": null,
+      "debt_ratio": 0.0,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "無借金＋黒字"
     },
     {
       "code": "4519",
@@ -141,9 +152,10 @@
       "open_price": 7780.0,
       "close_price": 7642.0,
       "per": 28.99,
-      "debt_ratio": null,
-      "profit_status": "black",
-      "revenue_growth": "increase"
+      "debt_ratio": 0.0,
+      "profit_status": null,
+      "revenue_growth": "increase",
+      "reason": "無借金"
     },
     {
       "code": "6501",
@@ -155,7 +167,8 @@
       "per": 26.11,
       "debt_ratio": 0.067,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "財務健全＋黒字"
     },
     {
       "code": "8058",
@@ -167,7 +180,8 @@
       "per": 21.23,
       "debt_ratio": 0.269,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "財務健全＋黒字"
     },
     {
       "code": "8001",
@@ -179,7 +193,8 @@
       "per": 14.75,
       "debt_ratio": 0.284,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "市場平均よりやや低PER＋財務健全＋黒字"
     },
     {
       "code": "8031",
@@ -191,7 +206,8 @@
       "per": 15.82,
       "debt_ratio": 0.274,
       "profit_status": "black",
-      "revenue_growth": "decrease"
+      "revenue_growth": "decrease",
+      "reason": "市場平均よりやや低PER＋財務健全＋黒字"
     },
     {
       "code": "8053",
@@ -203,7 +219,8 @@
       "per": 12.63,
       "debt_ratio": 0.345,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "低PER＋黒字"
     },
     {
       "code": "7267",
@@ -215,7 +232,8 @@
       "per": null,
       "debt_ratio": 0.147,
       "profit_status": "red",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "財務健全"
     },
     {
       "code": "7201",
@@ -227,7 +245,8 @@
       "per": null,
       "debt_ratio": 0.426,
       "profit_status": "red",
-      "revenue_growth": "decrease"
+      "revenue_growth": "decrease",
+      "reason": "データ不足"
     },
     {
       "code": "6902",
@@ -239,7 +258,8 @@
       "per": 7.58,
       "debt_ratio": 0.093,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "低PER＋財務健全＋黒字"
     },
     {
       "code": "6981",
@@ -251,7 +271,8 @@
       "per": 86.96,
       "debt_ratio": 0.017,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "財務健全＋黒字"
     },
     {
       "code": "6594",
@@ -263,7 +284,8 @@
       "per": 26.6,
       "debt_ratio": 0.191,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "財務健全＋黒字"
     },
     {
       "code": "6273",
@@ -275,7 +297,8 @@
       "per": 28.74,
       "debt_ratio": 0.002,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "無借金＋黒字"
     },
     {
       "code": "6367",
@@ -287,7 +310,8 @@
       "per": 27.4,
       "debt_ratio": 0.188,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "財務健全＋黒字"
     },
     {
       "code": "7741",
@@ -299,7 +323,8 @@
       "per": 34.84,
       "debt_ratio": 0.032,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "財務健全＋黒字"
     },
     {
       "code": "4543",
@@ -311,7 +336,8 @@
       "per": 24.51,
       "debt_ratio": 0.164,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "財務健全＋黒字"
     },
     {
       "code": "4568",
@@ -323,7 +349,8 @@
       "per": 18.87,
       "debt_ratio": 0.075,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "市場平均よりやや低PER＋財務健全＋黒字"
     },
     {
       "code": "4502",
@@ -335,7 +362,8 @@
       "per": null,
       "debt_ratio": 0.315,
       "profit_status": "red",
-      "revenue_growth": "decrease"
+      "revenue_growth": "decrease",
+      "reason": "データ不足"
     },
     {
       "code": "4503",
@@ -347,7 +375,8 @@
       "per": 13.26,
       "debt_ratio": 0.159,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "低PER＋財務健全＋黒字"
     },
     {
       "code": "3382",
@@ -359,7 +388,8 @@
       "per": 17.04,
       "debt_ratio": 0.415,
       "profit_status": "black",
-      "revenue_growth": "decrease"
+      "revenue_growth": "decrease",
+      "reason": "市場平均よりやや低PER＋黒字"
     },
     {
       "code": "9433",
@@ -371,7 +401,8 @@
       "per": 14.73,
       "debt_ratio": 0.305,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "市場平均よりやや低PER＋黒字"
     },
     {
       "code": "9434",
@@ -383,7 +414,8 @@
       "per": 18.55,
       "debt_ratio": 0.35,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "市場平均よりやや低PER＋黒字"
     },
     {
       "code": "2914",
@@ -395,7 +427,8 @@
       "per": 21.55,
       "debt_ratio": 0.199,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "財務健全＋黒字"
     },
     {
       "code": "2802",
@@ -407,7 +440,8 @@
       "per": 44.64,
       "debt_ratio": 0.232,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "財務健全＋黒字"
     },
     {
       "code": "4452",
@@ -419,7 +453,8 @@
       "per": 28.33,
       "debt_ratio": 0.13,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "財務健全＋黒字"
     },
     {
       "code": "4911",
@@ -431,7 +466,8 @@
       "per": null,
       "debt_ratio": 0.255,
       "profit_status": "red",
-      "revenue_growth": "decrease"
+      "revenue_growth": "decrease",
+      "reason": "財務健全"
     },
     {
       "code": "5108",
@@ -443,7 +479,8 @@
       "per": 29.5,
       "debt_ratio": 0.144,
       "profit_status": "black",
-      "revenue_growth": "decrease"
+      "revenue_growth": "decrease",
+      "reason": "財務健全＋黒字"
     },
     {
       "code": "5401",
@@ -455,7 +492,8 @@
       "per": 166.63,
       "debt_ratio": 0.353,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "黒字"
     },
     {
       "code": "4188",
@@ -467,7 +505,8 @@
       "per": null,
       "debt_ratio": 0.322,
       "profit_status": "black",
-      "revenue_growth": "decrease"
+      "revenue_growth": "decrease",
+      "reason": "黒字"
     },
     {
       "code": "4005",
@@ -479,7 +518,8 @@
       "per": 14.9,
       "debt_ratio": 0.338,
       "profit_status": "black",
-      "revenue_growth": "decrease"
+      "revenue_growth": "decrease",
+      "reason": "市場平均よりやや低PER＋黒字"
     },
     {
       "code": "8766",
@@ -491,7 +531,8 @@
       "per": 27.17,
       "debt_ratio": 0.007,
       "profit_status": "red",
-      "revenue_growth": "decrease"
+      "revenue_growth": "decrease",
+      "reason": "無借金"
     },
     {
       "code": "8750",
@@ -503,7 +544,8 @@
       "per": 15.2,
       "debt_ratio": 0.018,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "市場平均よりやや低PER＋財務健全＋黒字"
     },
     {
       "code": "8591",
@@ -515,7 +557,8 @@
       "per": 15.85,
       "debt_ratio": 0.363,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "市場平均よりやや低PER＋黒字"
     },
     {
       "code": "8604",
@@ -527,7 +570,8 @@
       "per": 12.36,
       "debt_ratio": 0.285,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "低PER＋財務健全＋黒字"
     },
     {
       "code": "9020",
@@ -539,7 +583,8 @@
       "per": 15.77,
       "debt_ratio": 0.449,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "市場平均よりやや低PER＋黒字"
     },
     {
       "code": "9022",
@@ -551,7 +596,8 @@
       "per": 6.16,
       "debt_ratio": 0.396,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "低PER＋黒字"
     },
     {
       "code": "9101",
@@ -563,7 +609,8 @@
       "per": 10.32,
       "debt_ratio": 0.231,
       "profit_status": "black",
-      "revenue_growth": "decrease"
+      "revenue_growth": "decrease",
+      "reason": "低PER＋財務健全＋黒字"
     },
     {
       "code": "9104",
@@ -575,7 +622,8 @@
       "per": 8.38,
       "debt_ratio": 0.416,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "低PER＋黒字"
     },
     {
       "code": "6954",
@@ -585,9 +633,10 @@
       "open_price": 7209.0,
       "close_price": 7439.0,
       "per": 41.67,
-      "debt_ratio": null,
+      "debt_ratio": 0.0,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "無借金＋黒字"
     },
     {
       "code": "6301",
@@ -599,7 +648,8 @@
       "per": 16.0,
       "debt_ratio": 0.221,
       "profit_status": "black",
-      "revenue_growth": "increase"
+      "revenue_growth": "increase",
+      "reason": "市場平均よりやや低PER＋財務健全＋黒字"
     }
   ],
   "errors": []
