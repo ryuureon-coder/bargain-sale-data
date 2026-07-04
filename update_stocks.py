@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-投資分析アプリ「バーゲンセール」データ更新スクリプト v2
-変更点:
-  1. 無借金企業の判定を修正(貸借対照表にTotal Debt行が無い = 負債ゼロと判定)
-  2. チャート用に1年分の株価履歴(週次)を history.json として出力
-     - 各銘柄 + 日経平均(^N225) + TOPIX連動ETF(1306.T ※TOPIXの代替)
-  3. 理由文(reason)を実データから動的に生成
+投資分析アプリ「バーゲンセール」データ更新スクリプト v3
+v2からの変更点:
+  詳細指標を追加取得(PBR / EPS / ROE / ROA / PSR / PEGレシオ /
+  自己資本比率 / 営業CF / フリーCF / 利益の安定性)
 """
 
 import json
@@ -22,7 +20,6 @@ HISTORY_OUTPUT = "history.json"
 
 JST = timezone(timedelta(hours=9))
 
-# 実質無借金とみなす負債比率の閾値(1%未満)
 DEBT_FREE_THRESHOLD = 0.01
 
 
@@ -30,16 +27,16 @@ def safe_round(value, digits=1):
     if value is None:
         return None
     try:
-        return round(float(value), digits)
+        v = float(value)
+        if v != v:  # NaN
+            return None
+        return round(v, digits)
     except (TypeError, ValueError):
         return None
 
 
 def get_debt_ratio(ticker):
-    """負債比率 = 有利子負債合計 ÷ 総資産
-    v2: 貸借対照表は取得できたが Total Debt 行が存在しない場合は
-        「有利子負債ゼロ(無借金)」とみなして 0.0 を返す
-    """
+    """負債比率 = 有利子負債合計 ÷ 総資産(Total Debt行なし=無借金0.0)"""
     try:
         bs = ticker.balance_sheet
         if bs is None or bs.empty:
@@ -49,16 +46,53 @@ def get_debt_ratio(ticker):
         if total_assets is None or float(total_assets) == 0:
             return None
         if "Total Debt" not in bs.index:
-            return 0.0  # ← v2修正: 無借金企業
+            return 0.0
         total_debt = latest.get("Total Debt")
         if total_debt is None or str(total_debt) == "nan":
-            return 0.0  # 値が空欄の場合も無借金扱い
+            return 0.0
         ratio = float(total_debt) / float(total_assets)
         if ratio < 0:
             return None
         return round(ratio, 3)
     except Exception:
         return None
+
+
+def get_equity_ratio(ticker):
+    """自己資本比率 = 自己資本 ÷ 総資産"""
+    try:
+        bs = ticker.balance_sheet
+        if bs is None or bs.empty:
+            return None
+        latest = bs.iloc[:, 0]
+        total_assets = latest.get("Total Assets")
+        equity = latest.get("Stockholders Equity")
+        if equity is None or str(equity) == "nan":
+            equity = latest.get("Total Equity Gross Minority Interest")
+        if total_assets in (None, 0) or equity is None or str(equity) == "nan":
+            return None
+        return round(float(equity) / float(total_assets), 3)
+    except Exception:
+        return None
+
+
+def get_cashflows(ticker):
+    """(営業CF, フリーCF) を円単位で返す"""
+    try:
+        cf = ticker.cashflow
+        if cf is None or cf.empty:
+            return (None, None)
+        latest = cf.iloc[:, 0]
+
+        def pick(key):
+            v = latest.get(key)
+            if v is None or str(v) == "nan":
+                return None
+            return float(v)
+
+        return (pick("Operating Cash Flow"), pick("Free Cash Flow"))
+    except Exception:
+        return (None, None)
 
 
 def get_profit_status(ticker):
@@ -72,6 +106,28 @@ def get_profit_status(ticker):
         return "black" if float(net_income) > 0 else "red"
     except Exception:
         return None
+
+
+def get_profit_stability(ticker):
+    """(黒字期数, 集計期数) 直近最大4期の黒字回数"""
+    try:
+        fin = ticker.income_stmt
+        if fin is None or fin.empty:
+            return (None, None)
+        total = 0
+        black = 0
+        for col in range(fin.shape[1]):
+            ni = fin.iloc[:, col].get("Net Income")
+            if ni is None or str(ni) == "nan":
+                continue
+            total += 1
+            if float(ni) > 0:
+                black += 1
+        if total == 0:
+            return (None, None)
+        return (black, total)
+    except Exception:
+        return (None, None)
 
 
 def get_revenue_growth(ticker):
@@ -89,7 +145,6 @@ def get_revenue_growth(ticker):
 
 
 def build_reason(per, market_per, debt_ratio, profit_status):
-    """v2: 実データから理由文を動的に組み立てる(要件書■5対応)"""
     parts = []
     if per is not None and market_per is not None:
         if per < market_per * 0.7:
@@ -107,7 +162,6 @@ def build_reason(per, market_per, debt_ratio, profit_status):
 
 
 def get_weekly_history(ticker_obj):
-    """1年分の週次終値履歴を返す(チャート用・約52点)"""
     try:
         hist = ticker_obj.history(period="1y", interval="1wk")
         if hist is None or hist.empty:
@@ -148,6 +202,9 @@ def fetch_stock(entry):
     except Exception:
         pass
 
+    op_cf, free_cf = get_cashflows(ticker)
+    black_years, total_years = get_profit_stability(ticker)
+
     stock = {
         "code": code,
         "name": entry["name"],
@@ -159,6 +216,19 @@ def fetch_stock(entry):
         "debt_ratio": get_debt_ratio(ticker),
         "profit_status": get_profit_status(ticker),
         "revenue_growth": get_revenue_growth(ticker),
+        # ---- v3 追加指標 ----
+        "pbr": safe_round(info.get("priceToBook"), 2),
+        "eps": safe_round(info.get("trailingEps"), 1),
+        "roe": safe_round(info.get("returnOnEquity"), 4),
+        "roa": safe_round(info.get("returnOnAssets"), 4),
+        "psr": safe_round(info.get("priceToSalesTrailing12Months"), 2),
+        "peg": safe_round(
+            info.get("trailingPegRatio") or info.get("pegRatio"), 2),
+        "equity_ratio": get_equity_ratio(ticker),
+        "operating_cf": op_cf,
+        "free_cf": free_cf,
+        "profit_years_black": black_years,
+        "profit_years_total": total_years,
     }
     weekly = get_weekly_history(ticker)
     return stock, weekly
@@ -177,14 +247,12 @@ def main():
             stock, weekly = fetch_stock(entry)
             stocks.append(stock)
             histories[entry["code"]] = weekly
-            print(f"[{i}/{len(tickers)}] OK: {entry['code']} {entry['name']} (履歴{len(weekly)}点)")
+            print(f"[{i}/{len(tickers)}] OK: {entry['code']} {entry['name']}")
         except Exception as e:
             errors.append({"code": entry["code"], "error": str(e)})
             print(f"[{i}/{len(tickers)}] NG: {entry['code']} {e}")
         time.sleep(1.5)
 
-    # 指数の履歴(チャート比較用)
-    # 日経平均: ^N225 / TOPIX: 直接取得できないためTOPIX連動ETF(1306.T)を代替使用
     index_histories = {}
     for key, symbol in [("nikkei", "^N225"), ("topix_etf", "1306.T")]:
         try:
@@ -195,13 +263,13 @@ def main():
             print(f"指数NG: {key} {e}")
         time.sleep(1.5)
 
-    # 市場PER = 中央値
-    valid_pers = [s["per"] for s in stocks if s["per"] is not None and 0 < s["per"] < 200]
+    valid_pers = [s["per"] for s in stocks
+                  if s["per"] is not None and 0 < s["per"] < 200]
     market_per = round(statistics.median(valid_pers), 2) if valid_pers else None
 
-    # v2: 理由文を動的生成して各銘柄に付与
     for s in stocks:
-        s["reason"] = build_reason(s["per"], market_per, s["debt_ratio"], s["profit_status"])
+        s["reason"] = build_reason(
+            s["per"], market_per, s["debt_ratio"], s["profit_status"])
 
     now = datetime.now(JST).strftime("%Y-%m-%d %H:%M:%S")
 
@@ -213,6 +281,8 @@ def main():
         json.dump({
             "updated_at": now,
             "market_per": market_per,
+            # 公式の日経平均PER/TOPIX PERは無料データ源では取得不可のため
+            # 本アプリでは市場PER(対象銘柄の中央値)を基準値として使用する
             "nikkei_per": None,
             "topix_per": None,
         }, f, ensure_ascii=False, indent=2)
