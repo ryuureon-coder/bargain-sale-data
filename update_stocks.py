@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-投資分析アプリ「バーゲンセール」データ更新スクリプト v3
-v2からの変更点:
-  詳細指標を追加取得(PBR / EPS / ROE / ROA / PSR / PEGレシオ /
-  自己資本比率 / 営業CF / フリーCF / 利益の安定性)
+投資分析アプリ「バーゲンセール」データ更新スクリプト v3.1
+v3からの変更点:
+  ・配当利回りを追加(年間配当額÷株価で自前計算し、表記ゆれを回避)
+  ・株主優待フラグ(tickers.jsonの "yutai" キーをそのまま転記。手動管理)
 """
 
 import json
@@ -144,6 +144,24 @@ def get_revenue_growth(ticker):
         return None
 
 
+def get_dividend_yield(info, price):
+    """配当利回り(%) = 年間配当額 ÷ 株価 × 100
+    yfinanceのdividendYieldはバージョンにより%表記/小数表記が
+    混在するため、配当額から自前計算して表記ゆれを回避する"""
+    try:
+        rate = info.get("dividendRate")
+        if rate is None:
+            rate = info.get("trailingAnnualDividendRate")
+        if rate is None or price in (None, 0):
+            return None
+        r = float(rate)
+        if r != r or r < 0:  # NaN/負値を除外
+            return None
+        return round(r / float(price) * 100, 2)
+    except Exception:
+        return None
+
+
 def build_reason(per, market_per, debt_ratio, profit_status):
     parts = []
     if per is not None and market_per is not None:
@@ -229,6 +247,10 @@ def fetch_stock(entry):
         "free_cf": free_cf,
         "profit_years_black": black_years,
         "profit_years_total": total_years,
+        "dividend_yield": get_dividend_yield(info, price),
+        # 株主優待: 無料APIでは取得不可のため手動管理(tickers.jsonに
+        # "yutai": "あり" 等を書いた銘柄のみ値が入る。未記入はnull)
+        "shareholder_benefit": entry.get("yutai"),
     }
     weekly = get_weekly_history(ticker)
     return stock, weekly
