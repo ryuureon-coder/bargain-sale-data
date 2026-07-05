@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-05 10:20:28",
+  "updated_at": "2026-07-05 10:55:11",
   "stocks": [
     {
       "code": "7203",
@@ -25,6 +25,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 3.54,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 44.0
+        },
+        {
+          "year": 2020,
+          "total": 45.0
+        },
+        {
+          "year": 2021,
+          "total": 51.0
+        },
+        {
+          "year": 2022,
+          "total": 53.0
+        },
+        {
+          "year": 2023,
+          "total": 65.0
+        },
+        {
+          "year": 2024,
+          "total": 85.0
+        },
+        {
+          "year": 2025,
+          "total": 95.0
+        },
+        {
+          "year": 2026,
+          "total": 50.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 50.0
+      },
       "shareholder_benefit": null,
       "reason": "低PER＋黒字"
     },
@@ -52,6 +90,44 @@
       "profit_years_black": 3,
       "profit_years_total": 4,
       "dividend_yield": 1.04,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 8.0
+        },
+        {
+          "year": 2020,
+          "total": 10.0
+        },
+        {
+          "year": 2021,
+          "total": 12.0
+        },
+        {
+          "year": 2022,
+          "total": 14.0
+        },
+        {
+          "year": 2023,
+          "total": 16.0
+        },
+        {
+          "year": 2024,
+          "total": 19.0
+        },
+        {
+          "year": 2025,
+          "total": 22.5
+        },
+        {
+          "year": 2026,
+          "total": 12.5
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 12.5
+      },
       "shareholder_benefit": null,
       "reason": "財務健全"
     },
@@ -79,6 +155,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 3.7,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 3.8
+        },
+        {
+          "year": 2020,
+          "total": 3.9
+        },
+        {
+          "year": 2021,
+          "total": 4.2
+        },
+        {
+          "year": 2022,
+          "total": 4.8
+        },
+        {
+          "year": 2023,
+          "total": 4.9
+        },
+        {
+          "year": 2024,
+          "total": 5.2
+        },
+        {
+          "year": 2025,
+          "total": 5.25
+        },
+        {
+          "year": 2026,
+          "total": 2.65
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 2.65
+      },
       "shareholder_benefit": null,
       "reason": "低PER＋黒字"
     },
@@ -106,6 +220,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 2.89,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 23.5
+        },
+        {
+          "year": 2020,
+          "total": 25.0
+        },
+        {
+          "year": 2021,
+          "total": 26.0
+        },
+        {
+          "year": 2022,
+          "total": 30.5
+        },
+        {
+          "year": 2023,
+          "total": 36.5
+        },
+        {
+          "year": 2024,
+          "total": 45.5
+        },
+        {
+          "year": 2025,
+          "total": 74.0
+        },
+        {
+          "year": 2026,
+          "total": 51.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 51.0
+      },
       "shareholder_benefit": null,
       "reason": "市場平均よりやや低PER＋財務健全＋黒字"
     },
@@ -133,6 +285,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 0.68,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 100.0
+        },
+        {
+          "year": 2020,
+          "total": 200.0
+        },
+        {
+          "year": 2021,
+          "total": 200.0
+        },
+        {
+          "year": 2022,
+          "total": 250.0
+        },
+        {
+          "year": 2023,
+          "total": 300.0
+        },
+        {
+          "year": 2024,
+          "total": 325.0
+        },
+        {
+          "year": 2025,
+          "total": 450.0
+        },
+        {
+          "year": 2026,
+          "total": 275.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-18",
+        "amount": 275.0
+      },
       "shareholder_benefit": null,
       "reason": "無借金＋黒字"
     },
@@ -160,6 +350,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 0.76,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 160.0
+        },
+        {
+          "year": 2020,
+          "total": 160.0
+        },
+        {
+          "year": 2021,
+          "total": 160.0
+        },
+        {
+          "year": 2022,
+          "total": 206.67
+        },
+        {
+          "year": 2023,
+          "total": 290.0
+        },
+        {
+          "year": 2024,
+          "total": 400.0
+        },
+        {
+          "year": 2025,
+          "total": 500.0
+        },
+        {
+          "year": 2026,
+          "total": 320.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-02-26",
+        "amount": 320.0
+      },
       "shareholder_benefit": null,
       "reason": "財務健全＋黒字"
     },
@@ -187,6 +415,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 0.99,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 197.0
+        },
+        {
+          "year": 2020,
+          "total": 234.0
+        },
+        {
+          "year": 2021,
+          "total": 354.67
+        },
+        {
+          "year": 2022,
+          "total": 539.0
+        },
+        {
+          "year": 2023,
+          "total": 432.66
+        },
+        {
+          "year": 2024,
+          "total": 510.0
+        },
+        {
+          "year": 2025,
+          "total": 591.0
+        },
+        {
+          "year": 2026,
+          "total": 364.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 364.0
+      },
       "shareholder_benefit": null,
       "reason": "無借金＋黒字"
     },
@@ -214,6 +480,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 0.22,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 29.5
+        },
+        {
+          "year": 2020,
+          "total": 24.5
+        },
+        {
+          "year": 2021,
+          "total": 21.0
+        },
+        {
+          "year": 2022,
+          "total": 21.5
+        },
+        {
+          "year": 2023,
+          "total": 22.5
+        },
+        {
+          "year": 2024,
+          "total": 23.5
+        },
+        {
+          "year": 2025,
+          "total": 24.5
+        },
+        {
+          "year": 2026,
+          "total": 12.5
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 12.5
+      },
       "shareholder_benefit": null,
       "reason": "財務健全＋黒字"
     },
@@ -241,6 +545,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 1.52,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 42.0
+        },
+        {
+          "year": 2020,
+          "total": 44.0
+        },
+        {
+          "year": 2021,
+          "total": 58.0
+        },
+        {
+          "year": 2022,
+          "total": 95.0
+        },
+        {
+          "year": 2023,
+          "total": 105.0
+        },
+        {
+          "year": 2024,
+          "total": 103.0
+        },
+        {
+          "year": 2025,
+          "total": 106.0
+        },
+        {
+          "year": 2026,
+          "total": 53.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 53.0
+      },
       "shareholder_benefit": null,
       "reason": "財務健全＋黒字"
     },
@@ -268,6 +610,44 @@
       "profit_years_black": 1,
       "profit_years_total": 4,
       "dividend_yield": 0.18,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 8.25
+        },
+        {
+          "year": 2020,
+          "total": 11.0
+        },
+        {
+          "year": 2021,
+          "total": 11.0
+        },
+        {
+          "year": 2022,
+          "total": 11.0
+        },
+        {
+          "year": 2023,
+          "total": 11.0
+        },
+        {
+          "year": 2024,
+          "total": 11.0
+        },
+        {
+          "year": 2025,
+          "total": 11.0
+        },
+        {
+          "year": 2026,
+          "total": 5.5
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 5.5
+      },
       "shareholder_benefit": null,
       "reason": "低PER＋黒字"
     },
@@ -295,6 +675,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 3.07,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 91.0
+        },
+        {
+          "year": 2020,
+          "total": 163.0
+        },
+        {
+          "year": 2021,
+          "total": 203.0
+        },
+        {
+          "year": 2022,
+          "total": 204.0
+        },
+        {
+          "year": 2023,
+          "total": 203.0
+        },
+        {
+          "year": 2024,
+          "total": 166.0
+        },
+        {
+          "year": 2025,
+          "total": 127.0
+        },
+        {
+          "year": 2026,
+          "total": 177.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 177.0
+      },
       "shareholder_benefit": null,
       "reason": "無借金＋黒字"
     },
@@ -308,7 +726,7 @@
       "close_price": 7642.0,
       "per": 28.99,
       "debt_ratio": 0.0,
-      "profit_status": null,
+      "profit_status": "black",
       "revenue_growth": "increase",
       "pbr": 6.59,
       "eps": 263.6,
@@ -319,11 +737,49 @@
       "equity_ratio": 0.821,
       "operating_cf": 386280000000.0,
       "free_cf": 274673000000.0,
-      "profit_years_black": null,
-      "profit_years_total": null,
+      "profit_years_black": 4,
+      "profit_years_total": 4,
       "dividend_yield": 1.73,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 46.67
+        },
+        {
+          "year": 2020,
+          "total": 50.0
+        },
+        {
+          "year": 2021,
+          "total": 76.0
+        },
+        {
+          "year": 2022,
+          "total": 78.0
+        },
+        {
+          "year": 2023,
+          "total": 80.0
+        },
+        {
+          "year": 2024,
+          "total": 98.0
+        },
+        {
+          "year": 2025,
+          "total": 272.0
+        },
+        {
+          "year": 2026,
+          "total": 66.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-06-29",
+        "amount": 66.0
+      },
       "shareholder_benefit": null,
-      "reason": "無借金"
+      "reason": "無借金＋黒字"
     },
     {
       "code": "6501",
@@ -349,6 +805,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 1.19,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 19.0
+        },
+        {
+          "year": 2020,
+          "total": 20.0
+        },
+        {
+          "year": 2021,
+          "total": 23.0
+        },
+        {
+          "year": 2022,
+          "total": 27.0
+        },
+        {
+          "year": 2023,
+          "total": 31.0
+        },
+        {
+          "year": 2024,
+          "total": 41.0
+        },
+        {
+          "year": 2025,
+          "total": 45.0
+        },
+        {
+          "year": 2026,
+          "total": 27.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 27.0
+      },
       "shareholder_benefit": null,
       "reason": "財務健全＋黒字"
     },
@@ -376,6 +870,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 2.8,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 42.33
+        },
+        {
+          "year": 2020,
+          "total": 45.0
+        },
+        {
+          "year": 2021,
+          "total": 46.0
+        },
+        {
+          "year": 2022,
+          "total": 52.0
+        },
+        {
+          "year": 2023,
+          "total": 69.33
+        },
+        {
+          "year": 2024,
+          "total": 85.0
+        },
+        {
+          "year": 2025,
+          "total": 105.0
+        },
+        {
+          "year": 2026,
+          "total": 55.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 55.0
+      },
       "shareholder_benefit": null,
       "reason": "財務健全＋黒字"
     },
@@ -403,6 +935,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 2.33,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 17.7
+        },
+        {
+          "year": 2020,
+          "total": 17.3
+        },
+        {
+          "year": 2021,
+          "total": 18.2
+        },
+        {
+          "year": 2022,
+          "total": 25.6
+        },
+        {
+          "year": 2023,
+          "total": 31.0
+        },
+        {
+          "year": 2024,
+          "total": 36.0
+        },
+        {
+          "year": 2025,
+          "total": 40.0
+        },
+        {
+          "year": 2026,
+          "total": 22.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 22.0
+      },
       "shareholder_benefit": null,
       "reason": "市場平均よりやや低PER＋財務健全＋黒字"
     },
@@ -430,6 +1000,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 3.04,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 40.0
+        },
+        {
+          "year": 2020,
+          "total": 40.0
+        },
+        {
+          "year": 2021,
+          "total": 42.5
+        },
+        {
+          "year": 2022,
+          "total": 62.5
+        },
+        {
+          "year": 2023,
+          "total": 80.0
+        },
+        {
+          "year": 2024,
+          "total": 92.5
+        },
+        {
+          "year": 2025,
+          "total": 105.0
+        },
+        {
+          "year": 2026,
+          "total": 60.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 60.0
+      },
       "shareholder_benefit": null,
       "reason": "市場平均よりやや低PER＋財務健全＋黒字"
     },
@@ -457,6 +1065,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 2.54,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 20.75
+        },
+        {
+          "year": 2020,
+          "total": 17.5
+        },
+        {
+          "year": 2021,
+          "total": 20.0
+        },
+        {
+          "year": 2022,
+          "total": 30.62
+        },
+        {
+          "year": 2023,
+          "total": 30.0
+        },
+        {
+          "year": 2024,
+          "total": 31.88
+        },
+        {
+          "year": 2025,
+          "total": 33.75
+        },
+        {
+          "year": 2026,
+          "total": 20.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 20.0
+      },
       "shareholder_benefit": null,
       "reason": "低PER＋黒字"
     },
@@ -484,6 +1130,44 @@
       "profit_years_black": 3,
       "profit_years_total": 4,
       "dividend_yield": 4.52,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 37.33
+        },
+        {
+          "year": 2020,
+          "total": 28.0
+        },
+        {
+          "year": 2021,
+          "total": 43.0
+        },
+        {
+          "year": 2022,
+          "total": 41.67
+        },
+        {
+          "year": 2023,
+          "total": 49.0
+        },
+        {
+          "year": 2024,
+          "total": 73.0
+        },
+        {
+          "year": 2025,
+          "total": 69.0
+        },
+        {
+          "year": 2026,
+          "total": 35.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 35.0
+      },
       "shareholder_benefit": null,
       "reason": "財務健全"
     },
@@ -511,6 +1195,28 @@
       "profit_years_black": 3,
       "profit_years_total": 4,
       "dividend_yield": 0.0,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 38.5
+        },
+        {
+          "year": 2022,
+          "total": 5.0
+        },
+        {
+          "year": 2023,
+          "total": 15.0
+        },
+        {
+          "year": 2024,
+          "total": 15.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2024-03-28",
+        "amount": 15.0
+      },
       "shareholder_benefit": null,
       "reason": "データ不足"
     },
@@ -538,6 +1244,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 3.78,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 35.0
+        },
+        {
+          "year": 2020,
+          "total": 35.0
+        },
+        {
+          "year": 2021,
+          "total": 35.0
+        },
+        {
+          "year": 2022,
+          "total": 43.75
+        },
+        {
+          "year": 2023,
+          "total": 48.75
+        },
+        {
+          "year": 2024,
+          "total": 62.0
+        },
+        {
+          "year": 2025,
+          "total": 64.0
+        },
+        {
+          "year": 2026,
+          "total": 35.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 35.0
+      },
       "shareholder_benefit": null,
       "reason": "低PER＋財務健全＋黒字"
     },
@@ -565,6 +1309,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 0.63,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 62.33
+        },
+        {
+          "year": 2020,
+          "total": 35.0
+        },
+        {
+          "year": 2021,
+          "total": 40.0
+        },
+        {
+          "year": 2022,
+          "total": 48.33
+        },
+        {
+          "year": 2023,
+          "total": 50.0
+        },
+        {
+          "year": 2024,
+          "total": 54.0
+        },
+        {
+          "year": 2025,
+          "total": 60.0
+        },
+        {
+          "year": 2026,
+          "total": 35.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 35.0
+      },
       "shareholder_benefit": null,
       "reason": "財務健全＋黒字"
     },
@@ -592,6 +1374,40 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 1.44,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 27.5
+        },
+        {
+          "year": 2020,
+          "total": 30.0
+        },
+        {
+          "year": 2021,
+          "total": 30.0
+        },
+        {
+          "year": 2022,
+          "total": 35.0
+        },
+        {
+          "year": 2023,
+          "total": 35.0
+        },
+        {
+          "year": 2024,
+          "total": 40.0
+        },
+        {
+          "year": 2025,
+          "total": 20.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2025-03-28",
+        "amount": 20.0
+      },
       "shareholder_benefit": null,
       "reason": "財務健全＋黒字"
     },
@@ -619,6 +1435,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 1.32,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 400.0
+        },
+        {
+          "year": 2020,
+          "total": 400.0
+        },
+        {
+          "year": 2021,
+          "total": 600.0
+        },
+        {
+          "year": 2022,
+          "total": 900.0
+        },
+        {
+          "year": 2023,
+          "total": 900.0
+        },
+        {
+          "year": 2024,
+          "total": 1000.0
+        },
+        {
+          "year": 2025,
+          "total": 1000.0
+        },
+        {
+          "year": 2026,
+          "total": 500.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 500.0
+      },
       "shareholder_benefit": null,
       "reason": "無借金＋黒字"
     },
@@ -646,6 +1500,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 1.4,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 170.0
+        },
+        {
+          "year": 2020,
+          "total": 160.0
+        },
+        {
+          "year": 2021,
+          "total": 170.0
+        },
+        {
+          "year": 2022,
+          "total": 210.0
+        },
+        {
+          "year": 2023,
+          "total": 260.0
+        },
+        {
+          "year": 2024,
+          "total": 315.0
+        },
+        {
+          "year": 2025,
+          "total": 310.0
+        },
+        {
+          "year": 2026,
+          "total": 175.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 175.0
+      },
       "shareholder_benefit": null,
       "reason": "財務健全＋黒字"
     },
@@ -673,6 +1565,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 1.14,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 90.0
+        },
+        {
+          "year": 2020,
+          "total": 90.0
+        },
+        {
+          "year": 2021,
+          "total": 90.0
+        },
+        {
+          "year": 2022,
+          "total": 110.0
+        },
+        {
+          "year": 2023,
+          "total": 110.0
+        },
+        {
+          "year": 2024,
+          "total": 110.0
+        },
+        {
+          "year": 2025,
+          "total": 240.0
+        },
+        {
+          "year": 2026,
+          "total": 170.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 170.0
+      },
       "shareholder_benefit": null,
       "reason": "財務健全＋黒字"
     },
@@ -700,6 +1630,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 1.59,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 13.75
+        },
+        {
+          "year": 2020,
+          "total": 14.0
+        },
+        {
+          "year": 2021,
+          "total": 15.0
+        },
+        {
+          "year": 2022,
+          "total": 18.5
+        },
+        {
+          "year": 2023,
+          "total": 21.5
+        },
+        {
+          "year": 2024,
+          "total": 24.0
+        },
+        {
+          "year": 2025,
+          "total": 28.0
+        },
+        {
+          "year": 2026,
+          "total": 15.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 15.0
+      },
       "shareholder_benefit": null,
       "reason": "財務健全＋黒字"
     },
@@ -727,6 +1695,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 3.77,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 23.33
+        },
+        {
+          "year": 2020,
+          "total": 25.17
+        },
+        {
+          "year": 2021,
+          "total": 27.0
+        },
+        {
+          "year": 2022,
+          "total": 28.5
+        },
+        {
+          "year": 2023,
+          "total": 35.0
+        },
+        {
+          "year": 2024,
+          "total": 60.0
+        },
+        {
+          "year": 2025,
+          "total": 69.0
+        },
+        {
+          "year": 2026,
+          "total": 39.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 39.0
+      },
       "shareholder_benefit": null,
       "reason": "市場平均よりやや低PER＋財務健全＋黒字"
     },
@@ -754,6 +1760,44 @@
       "profit_years_black": 3,
       "profit_years_total": 4,
       "dividend_yield": 3.81,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 180.0
+        },
+        {
+          "year": 2020,
+          "total": 180.0
+        },
+        {
+          "year": 2021,
+          "total": 180.0
+        },
+        {
+          "year": 2022,
+          "total": 180.0
+        },
+        {
+          "year": 2023,
+          "total": 184.0
+        },
+        {
+          "year": 2024,
+          "total": 192.0
+        },
+        {
+          "year": 2025,
+          "total": 198.0
+        },
+        {
+          "year": 2026,
+          "total": 100.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 100.0
+      },
       "shareholder_benefit": null,
       "reason": "データ不足"
     },
@@ -781,6 +1825,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 3.72,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 39.0
+        },
+        {
+          "year": 2020,
+          "total": 41.0
+        },
+        {
+          "year": 2021,
+          "total": 46.0
+        },
+        {
+          "year": 2022,
+          "total": 55.0
+        },
+        {
+          "year": 2023,
+          "total": 65.0
+        },
+        {
+          "year": 2024,
+          "total": 72.0
+        },
+        {
+          "year": 2025,
+          "total": 76.0
+        },
+        {
+          "year": 2026,
+          "total": 39.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 39.0
+      },
       "shareholder_benefit": null,
       "reason": "低PER＋財務健全＋黒字"
     },
@@ -808,6 +1890,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 2.96,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 31.67
+        },
+        {
+          "year": 2020,
+          "total": 32.83
+        },
+        {
+          "year": 2021,
+          "total": 33.0
+        },
+        {
+          "year": 2022,
+          "total": 33.83
+        },
+        {
+          "year": 2023,
+          "total": 40.0
+        },
+        {
+          "year": 2024,
+          "total": 38.83
+        },
+        {
+          "year": 2025,
+          "total": 45.0
+        },
+        {
+          "year": 2026,
+          "total": 25.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-02-26",
+        "amount": 25.0
+      },
       "shareholder_benefit": null,
       "reason": "市場平均よりやや低PER＋黒字"
     },
@@ -835,6 +1955,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 3.11,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 55.0
+        },
+        {
+          "year": 2020,
+          "total": 60.0
+        },
+        {
+          "year": 2021,
+          "total": 60.0
+        },
+        {
+          "year": 2022,
+          "total": 65.0
+        },
+        {
+          "year": 2023,
+          "total": 70.0
+        },
+        {
+          "year": 2024,
+          "total": 70.0
+        },
+        {
+          "year": 2025,
+          "total": 77.5
+        },
+        {
+          "year": 2026,
+          "total": 40.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 40.0
+      },
       "shareholder_benefit": null,
       "reason": "市場平均よりやや低PER＋黒字"
     },
@@ -862,6 +2020,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 4.21,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 8.0
+        },
+        {
+          "year": 2020,
+          "total": 8.55
+        },
+        {
+          "year": 2021,
+          "total": 8.6
+        },
+        {
+          "year": 2022,
+          "total": 8.6
+        },
+        {
+          "year": 2023,
+          "total": 8.6
+        },
+        {
+          "year": 2024,
+          "total": 8.6
+        },
+        {
+          "year": 2025,
+          "total": 8.6
+        },
+        {
+          "year": 2026,
+          "total": 4.3
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 4.3
+      },
       "shareholder_benefit": null,
       "reason": "市場平均よりやや低PER＋黒字"
     },
@@ -889,6 +2085,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 4.0,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 154.0
+        },
+        {
+          "year": 2020,
+          "total": 154.0
+        },
+        {
+          "year": 2021,
+          "total": 140.0
+        },
+        {
+          "year": 2022,
+          "total": 188.0
+        },
+        {
+          "year": 2023,
+          "total": 194.0
+        },
+        {
+          "year": 2024,
+          "total": 194.0
+        },
+        {
+          "year": 2025,
+          "total": 234.0
+        },
+        {
+          "year": 2026,
+          "total": 121.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-06-29",
+        "amount": 121.0
+      },
       "shareholder_benefit": null,
       "reason": "財務健全＋黒字"
     },
@@ -916,6 +2150,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 0.81,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 16.0
+        },
+        {
+          "year": 2020,
+          "total": 16.0
+        },
+        {
+          "year": 2021,
+          "total": 20.0
+        },
+        {
+          "year": 2022,
+          "total": 29.5
+        },
+        {
+          "year": 2023,
+          "total": 37.0
+        },
+        {
+          "year": 2024,
+          "total": 38.5
+        },
+        {
+          "year": 2025,
+          "total": 44.0
+        },
+        {
+          "year": 2026,
+          "total": 24.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 24.0
+      },
       "shareholder_benefit": null,
       "reason": "財務健全＋黒字"
     },
@@ -943,6 +2215,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 3.56,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 65.0
+        },
+        {
+          "year": 2020,
+          "total": 70.0
+        },
+        {
+          "year": 2021,
+          "total": 72.0
+        },
+        {
+          "year": 2022,
+          "total": 74.0
+        },
+        {
+          "year": 2023,
+          "total": 75.0
+        },
+        {
+          "year": 2024,
+          "total": 76.0
+        },
+        {
+          "year": 2025,
+          "total": 77.0
+        },
+        {
+          "year": 2026,
+          "total": 78.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-06-29",
+        "amount": 78.0
+      },
       "shareholder_benefit": null,
       "reason": "財務健全＋黒字"
     },
@@ -970,6 +2280,44 @@
       "profit_years_black": 2,
       "profit_years_total": 4,
       "dividend_yield": 2.17,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 60.0
+        },
+        {
+          "year": 2020,
+          "total": 40.0
+        },
+        {
+          "year": 2021,
+          "total": 50.0
+        },
+        {
+          "year": 2022,
+          "total": 100.0
+        },
+        {
+          "year": 2023,
+          "total": 60.0
+        },
+        {
+          "year": 2024,
+          "total": 40.0
+        },
+        {
+          "year": 2025,
+          "total": 40.0
+        },
+        {
+          "year": 2026,
+          "total": 30.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-06-29",
+        "amount": 30.0
+      },
       "shareholder_benefit": null,
       "reason": "財務健全"
     },
@@ -997,6 +2345,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 3.7,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 80.0
+        },
+        {
+          "year": 2020,
+          "total": 55.0
+        },
+        {
+          "year": 2021,
+          "total": 85.0
+        },
+        {
+          "year": 2022,
+          "total": 87.5
+        },
+        {
+          "year": 2023,
+          "total": 100.0
+        },
+        {
+          "year": 2024,
+          "total": 105.0
+        },
+        {
+          "year": 2025,
+          "total": 115.0
+        },
+        {
+          "year": 2026,
+          "total": 60.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-06-29",
+        "amount": 60.0
+      },
       "shareholder_benefit": null,
       "reason": "財務健全＋黒字"
     },
@@ -1024,6 +2410,40 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 4.38,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 10.0
+        },
+        {
+          "year": 2021,
+          "total": 16.0
+        },
+        {
+          "year": 2022,
+          "total": 36.0
+        },
+        {
+          "year": 2023,
+          "total": 33.0
+        },
+        {
+          "year": 2024,
+          "total": 33.0
+        },
+        {
+          "year": 2025,
+          "total": 76.0
+        },
+        {
+          "year": 2026,
+          "total": 12.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 12.0
+      },
       "shareholder_benefit": null,
       "reason": "黒字"
     },
@@ -1051,6 +2471,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 2.75,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 40.0
+        },
+        {
+          "year": 2020,
+          "total": 24.0
+        },
+        {
+          "year": 2021,
+          "total": 27.0
+        },
+        {
+          "year": 2022,
+          "total": 30.0
+        },
+        {
+          "year": 2023,
+          "total": 31.0
+        },
+        {
+          "year": 2024,
+          "total": 32.0
+        },
+        {
+          "year": 2025,
+          "total": 32.0
+        },
+        {
+          "year": 2026,
+          "total": 16.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 16.0
+      },
       "shareholder_benefit": null,
       "reason": "黒字"
     },
@@ -1078,6 +2536,44 @@
       "profit_years_black": 3,
       "profit_years_total": 4,
       "dividend_yield": 2.89,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 22.0
+        },
+        {
+          "year": 2020,
+          "total": 12.0
+        },
+        {
+          "year": 2021,
+          "total": 16.0
+        },
+        {
+          "year": 2022,
+          "total": 26.0
+        },
+        {
+          "year": 2023,
+          "total": 12.0
+        },
+        {
+          "year": 2024,
+          "total": 6.0
+        },
+        {
+          "year": 2025,
+          "total": 12.0
+        },
+        {
+          "year": 2026,
+          "total": 7.5
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 7.5
+      },
       "shareholder_benefit": null,
       "reason": "市場平均よりやや低PER＋黒字"
     },
@@ -1105,6 +2601,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 3.23,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 73.33
+        },
+        {
+          "year": 2020,
+          "total": 76.67
+        },
+        {
+          "year": 2021,
+          "total": 73.33
+        },
+        {
+          "year": 2022,
+          "total": 95.0
+        },
+        {
+          "year": 2023,
+          "total": 110.5
+        },
+        {
+          "year": 2024,
+          "total": 143.5
+        },
+        {
+          "year": 2025,
+          "total": 196.5
+        },
+        {
+          "year": 2026,
+          "total": 112.5
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 112.5
+      },
       "shareholder_benefit": null,
       "reason": "無借金"
     },
@@ -1132,6 +2666,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 3.91,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 14.5
+        },
+        {
+          "year": 2020,
+          "total": 15.5
+        },
+        {
+          "year": 2021,
+          "total": 15.5
+        },
+        {
+          "year": 2022,
+          "total": 20.75
+        },
+        {
+          "year": 2023,
+          "total": 21.5
+        },
+        {
+          "year": 2024,
+          "total": 43.5
+        },
+        {
+          "year": 2025,
+          "total": 43.0
+        },
+        {
+          "year": 2026,
+          "total": 30.5
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 30.5
+      },
       "shareholder_benefit": null,
       "reason": "市場平均よりやや低PER＋財務健全＋黒字"
     },
@@ -1159,6 +2731,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 2.47,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 81.0
+        },
+        {
+          "year": 2020,
+          "total": 76.0
+        },
+        {
+          "year": 2021,
+          "total": 80.0
+        },
+        {
+          "year": 2022,
+          "total": 89.4
+        },
+        {
+          "year": 2023,
+          "total": 85.6
+        },
+        {
+          "year": 2024,
+          "total": 117.97
+        },
+        {
+          "year": 2025,
+          "total": 151.6
+        },
+        {
+          "year": 2026,
+          "total": 62.34
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 62.34
+      },
       "shareholder_benefit": null,
       "reason": "市場平均よりやや低PER＋黒字"
     },
@@ -1186,6 +2796,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 3.47,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 18.0
+        },
+        {
+          "year": 2020,
+          "total": 25.0
+        },
+        {
+          "year": 2021,
+          "total": 23.0
+        },
+        {
+          "year": 2022,
+          "total": 19.0
+        },
+        {
+          "year": 2023,
+          "total": 20.0
+        },
+        {
+          "year": 2024,
+          "total": 38.0
+        },
+        {
+          "year": 2025,
+          "total": 61.0
+        },
+        {
+          "year": 2026,
+          "total": 24.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 24.0
+      },
       "shareholder_benefit": null,
       "reason": "低PER＋財務健全＋黒字"
     },
@@ -1213,6 +2861,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 2.43,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 52.5
+        },
+        {
+          "year": 2020,
+          "total": 44.17
+        },
+        {
+          "year": 2021,
+          "total": 33.33
+        },
+        {
+          "year": 2022,
+          "total": 33.33
+        },
+        {
+          "year": 2023,
+          "total": 35.0
+        },
+        {
+          "year": 2024,
+          "total": 54.33
+        },
+        {
+          "year": 2025,
+          "total": 69.0
+        },
+        {
+          "year": 2026,
+          "total": 39.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 39.0
+      },
       "shareholder_benefit": null,
       "reason": "市場平均よりやや低PER＋黒字"
     },
@@ -1240,6 +2926,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 0.91,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 30.0
+        },
+        {
+          "year": 2020,
+          "total": 28.0
+        },
+        {
+          "year": 2021,
+          "total": 26.0
+        },
+        {
+          "year": 2022,
+          "total": 26.0
+        },
+        {
+          "year": 2023,
+          "total": 28.0
+        },
+        {
+          "year": 2024,
+          "total": 30.0
+        },
+        {
+          "year": 2025,
+          "total": 32.0
+        },
+        {
+          "year": 2026,
+          "total": 16.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 16.0
+      },
       "shareholder_benefit": null,
       "reason": "低PER＋黒字"
     },
@@ -1267,6 +2991,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 3.84,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 10.0
+        },
+        {
+          "year": 2020,
+          "total": 13.33
+        },
+        {
+          "year": 2021,
+          "total": 103.33
+        },
+        {
+          "year": 2022,
+          "total": 766.67
+        },
+        {
+          "year": 2023,
+          "total": 230.0
+        },
+        {
+          "year": 2024,
+          "total": 210.0
+        },
+        {
+          "year": 2025,
+          "total": 310.0
+        },
+        {
+          "year": 2026,
+          "total": 115.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 115.0
+      },
       "shareholder_benefit": null,
       "reason": "低PER＋財務健全＋黒字"
     },
@@ -1294,6 +3056,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 3.95,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 18.33
+        },
+        {
+          "year": 2020,
+          "total": 16.67
+        },
+        {
+          "year": 2021,
+          "total": 145.0
+        },
+        {
+          "year": 2022,
+          "total": 400.0
+        },
+        {
+          "year": 2023,
+          "total": 370.0
+        },
+        {
+          "year": 2024,
+          "total": 290.0
+        },
+        {
+          "year": 2025,
+          "total": 265.0
+        },
+        {
+          "year": 2026,
+          "total": 115.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 115.0
+      },
       "shareholder_benefit": null,
       "reason": "低PER＋黒字"
     },
@@ -1321,6 +3121,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 1.44,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 106.06
+        },
+        {
+          "year": 2020,
+          "total": 52.52
+        },
+        {
+          "year": 2021,
+          "total": 90.43
+        },
+        {
+          "year": 2022,
+          "total": 100.74
+        },
+        {
+          "year": 2023,
+          "total": 94.59
+        },
+        {
+          "year": 2024,
+          "total": 88.39
+        },
+        {
+          "year": 2025,
+          "total": 101.21
+        },
+        {
+          "year": 2026,
+          "total": 55.76
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 55.76
+      },
       "shareholder_benefit": null,
       "reason": "無借金＋黒字"
     },
@@ -1340,7 +3178,7 @@
       "eps": 414.2,
       "roe": 0.1139,
       "roa": 0.0585,
-      "psr": 1.43,
+      "psr": 1.45,
       "peg": 3.19,
       "equity_ratio": 0.547,
       "operating_cf": 448963000000.0,
@@ -1348,6 +3186,44 @@
       "profit_years_black": 4,
       "profit_years_total": 4,
       "dividend_yield": 2.87,
+      "dividend_history": [
+        {
+          "year": 2019,
+          "total": 114.0
+        },
+        {
+          "year": 2020,
+          "total": 57.0
+        },
+        {
+          "year": 2021,
+          "total": 75.0
+        },
+        {
+          "year": 2022,
+          "total": 120.0
+        },
+        {
+          "year": 2023,
+          "total": 147.0
+        },
+        {
+          "year": 2024,
+          "total": 178.0
+        },
+        {
+          "year": 2025,
+          "total": 202.0
+        },
+        {
+          "year": 2026,
+          "total": 95.0
+        }
+      ],
+      "latest_dividend": {
+        "date": "2026-03-30",
+        "amount": 95.0
+      },
       "shareholder_benefit": null,
       "reason": "市場平均よりやや低PER＋財務健全＋黒字"
     }
