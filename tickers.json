@@ -1,54 +1,259 @@
 {
   "tickers": [
-    {"code": "7203", "name": "トヨタ自動車", "market": "prime"},
-    {"code": "6758", "name": "ソニーグループ", "market": "prime"},
-    {"code": "9432", "name": "日本電信電話", "market": "prime"},
-    {"code": "8306", "name": "三菱UFJフィナンシャル・グループ", "market": "prime"},
-    {"code": "6861", "name": "キーエンス", "market": "prime"},
-    {"code": "9983", "name": "ファーストリテイリング", "market": "prime"},
-    {"code": "8035", "name": "東京エレクトロン", "market": "prime"},
-    {"code": "6098", "name": "リクルートホールディングス", "market": "prime"},
-    {"code": "4063", "name": "信越化学工業", "market": "prime"},
-    {"code": "9984", "name": "ソフトバンクグループ", "market": "prime"},
-    {"code": "7974", "name": "任天堂", "market": "prime"},
-    {"code": "4519", "name": "中外製薬", "market": "prime"},
-    {"code": "6501", "name": "日立製作所", "market": "prime"},
-    {"code": "8058", "name": "三菱商事", "market": "prime"},
-    {"code": "8001", "name": "伊藤忠商事", "market": "prime"},
-    {"code": "8031", "name": "三井物産", "market": "prime"},
-    {"code": "8053", "name": "住友商事", "market": "prime"},
-    {"code": "7267", "name": "本田技研工業", "market": "prime"},
-    {"code": "7201", "name": "日産自動車", "market": "prime"},
-    {"code": "6902", "name": "デンソー", "market": "prime"},
-    {"code": "6981", "name": "村田製作所", "market": "prime"},
-    {"code": "6594", "name": "ニデック", "market": "prime"},
-    {"code": "6273", "name": "SMC", "market": "prime"},
-    {"code": "6367", "name": "ダイキン工業", "market": "prime"},
-    {"code": "7741", "name": "HOYA", "market": "prime"},
-    {"code": "4543", "name": "テルモ", "market": "prime"},
-    {"code": "4568", "name": "第一三共", "market": "prime"},
-    {"code": "4502", "name": "武田薬品工業", "market": "prime"},
-    {"code": "4503", "name": "アステラス製薬", "market": "prime"},
-    {"code": "3382", "name": "セブン&アイ・ホールディングス", "market": "prime"},
-    {"code": "9433", "name": "KDDI", "market": "prime"},
-    {"code": "9434", "name": "ソフトバンク", "market": "prime"},
-    {"code": "2914", "name": "日本たばこ産業", "market": "prime"},
-    {"code": "2802", "name": "味の素", "market": "prime"},
-    {"code": "4452", "name": "花王", "market": "prime"},
-    {"code": "4911", "name": "資生堂", "market": "prime"},
-    {"code": "5108", "name": "ブリヂストン", "market": "prime"},
-    {"code": "5401", "name": "日本製鉄", "market": "prime"},
-    {"code": "4188", "name": "三菱ケミカルグループ", "market": "prime"},
-    {"code": "4005", "name": "住友化学", "market": "prime"},
-    {"code": "8766", "name": "東京海上ホールディングス", "market": "prime"},
-    {"code": "8750", "name": "第一生命ホールディングス", "market": "prime"},
-    {"code": "8591", "name": "オリックス", "market": "prime"},
-    {"code": "8604", "name": "野村ホールディングス", "market": "prime"},
-    {"code": "9020", "name": "東日本旅客鉄道", "market": "prime"},
-    {"code": "9022", "name": "東海旅客鉄道", "market": "prime"},
-    {"code": "9101", "name": "日本郵船", "market": "prime"},
-    {"code": "9104", "name": "商船三井", "market": "prime"},
-    {"code": "6954", "name": "ファナック", "market": "prime"},
-    {"code": "6301", "name": "小松製作所", "market": "prime"}
+    {
+      "code": "7203",
+      "name": "トヨタ自動車",
+      "market": "prime"
+    },
+    {
+      "code": "6758",
+      "name": "ソニーグループ",
+      "market": "prime"
+    },
+    {
+      "code": "9432",
+      "name": "日本電信電話",
+      "market": "prime"
+    },
+    {
+      "code": "8306",
+      "name": "三菱UFJフィナンシャル・グループ",
+      "market": "prime",
+      "sector": "financial"
+    },
+    {
+      "code": "6861",
+      "name": "キーエンス",
+      "market": "prime"
+    },
+    {
+      "code": "9983",
+      "name": "ファーストリテイリング",
+      "market": "prime"
+    },
+    {
+      "code": "8035",
+      "name": "東京エレクトロン",
+      "market": "prime"
+    },
+    {
+      "code": "6098",
+      "name": "リクルートホールディングス",
+      "market": "prime"
+    },
+    {
+      "code": "4063",
+      "name": "信越化学工業",
+      "market": "prime"
+    },
+    {
+      "code": "9984",
+      "name": "ソフトバンクグループ",
+      "market": "prime"
+    },
+    {
+      "code": "7974",
+      "name": "任天堂",
+      "market": "prime"
+    },
+    {
+      "code": "4519",
+      "name": "中外製薬",
+      "market": "prime"
+    },
+    {
+      "code": "6501",
+      "name": "日立製作所",
+      "market": "prime"
+    },
+    {
+      "code": "8058",
+      "name": "三菱商事",
+      "market": "prime"
+    },
+    {
+      "code": "8001",
+      "name": "伊藤忠商事",
+      "market": "prime"
+    },
+    {
+      "code": "8031",
+      "name": "三井物産",
+      "market": "prime"
+    },
+    {
+      "code": "8053",
+      "name": "住友商事",
+      "market": "prime"
+    },
+    {
+      "code": "7267",
+      "name": "本田技研工業",
+      "market": "prime"
+    },
+    {
+      "code": "7201",
+      "name": "日産自動車",
+      "market": "prime"
+    },
+    {
+      "code": "6902",
+      "name": "デンソー",
+      "market": "prime"
+    },
+    {
+      "code": "6981",
+      "name": "村田製作所",
+      "market": "prime"
+    },
+    {
+      "code": "6594",
+      "name": "ニデック",
+      "market": "prime"
+    },
+    {
+      "code": "6273",
+      "name": "SMC",
+      "market": "prime"
+    },
+    {
+      "code": "6367",
+      "name": "ダイキン工業",
+      "market": "prime"
+    },
+    {
+      "code": "7741",
+      "name": "HOYA",
+      "market": "prime"
+    },
+    {
+      "code": "4543",
+      "name": "テルモ",
+      "market": "prime"
+    },
+    {
+      "code": "4568",
+      "name": "第一三共",
+      "market": "prime"
+    },
+    {
+      "code": "4502",
+      "name": "武田薬品工業",
+      "market": "prime"
+    },
+    {
+      "code": "4503",
+      "name": "アステラス製薬",
+      "market": "prime"
+    },
+    {
+      "code": "3382",
+      "name": "セブン&アイ・ホールディングス",
+      "market": "prime"
+    },
+    {
+      "code": "9433",
+      "name": "KDDI",
+      "market": "prime"
+    },
+    {
+      "code": "9434",
+      "name": "ソフトバンク",
+      "market": "prime"
+    },
+    {
+      "code": "2914",
+      "name": "日本たばこ産業",
+      "market": "prime"
+    },
+    {
+      "code": "2802",
+      "name": "味の素",
+      "market": "prime"
+    },
+    {
+      "code": "4452",
+      "name": "花王",
+      "market": "prime"
+    },
+    {
+      "code": "4911",
+      "name": "資生堂",
+      "market": "prime"
+    },
+    {
+      "code": "5108",
+      "name": "ブリヂストン",
+      "market": "prime"
+    },
+    {
+      "code": "5401",
+      "name": "日本製鉄",
+      "market": "prime"
+    },
+    {
+      "code": "4188",
+      "name": "三菱ケミカルグループ",
+      "market": "prime"
+    },
+    {
+      "code": "4005",
+      "name": "住友化学",
+      "market": "prime"
+    },
+    {
+      "code": "8766",
+      "name": "東京海上ホールディングス",
+      "market": "prime",
+      "sector": "financial"
+    },
+    {
+      "code": "8750",
+      "name": "第一生命ホールディングス",
+      "market": "prime",
+      "sector": "financial"
+    },
+    {
+      "code": "8591",
+      "name": "オリックス",
+      "market": "prime",
+      "sector": "financial"
+    },
+    {
+      "code": "8604",
+      "name": "野村ホールディングス",
+      "market": "prime",
+      "sector": "financial"
+    },
+    {
+      "code": "9020",
+      "name": "東日本旅客鉄道",
+      "market": "prime"
+    },
+    {
+      "code": "9022",
+      "name": "東海旅客鉄道",
+      "market": "prime"
+    },
+    {
+      "code": "9101",
+      "name": "日本郵船",
+      "market": "prime"
+    },
+    {
+      "code": "9104",
+      "name": "商船三井",
+      "market": "prime"
+    },
+    {
+      "code": "6954",
+      "name": "ファナック",
+      "market": "prime"
+    },
+    {
+      "code": "6301",
+      "name": "小松製作所",
+      "market": "prime"
+    }
   ]
 }
