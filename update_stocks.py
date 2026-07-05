@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-投資分析アプリ「バーゲンセール」データ更新スクリプト v3.2
+投資分析アプリ「バーゲンセール」データ更新スクリプト v3.3
 v3からの変更点:
   ・配当利回りを追加(年間配当額÷株価で自前計算し、表記ゆれを回避)
   ・株主優待フラグ(tickers.jsonの "yutai" キーをそのまま転記。手動管理)
 v3.1からの変更点:
   ・業種フラグ(tickers.jsonの "sector" キーを転記。金融業の注記表示に使用)
+v3.2からの変更点:
+  ・配当履歴(2019年以降の暦年合算)と直近配当を追加
 """
 
 import json
@@ -164,6 +166,37 @@ def get_dividend_yield(info, price):
         return None
 
 
+def get_dividend_history(ticker):
+    """2019年以降の年間配当(暦年合算)と直近1回の配当を返す
+    戻り値: (history, latest)
+      history: [{"year": 2019, "total": 44.0}, ...] 年昇順
+      latest:  {"date": "YYYY-MM-DD", "amount": 22.0} or None
+    """
+    try:
+        div = ticker.dividends
+        if div is None or len(div) == 0:
+            return ([], None)
+        yearly = {}
+        latest = None
+        for date, amount in div.items():
+            try:
+                a = float(amount)
+            except (TypeError, ValueError):
+                continue
+            if a != a or a < 0:  # NaN/負値を除外
+                continue
+            y = int(date.year)
+            if y >= 2019:
+                yearly[y] = yearly.get(y, 0.0) + a
+            latest = {"date": date.strftime("%Y-%m-%d"),
+                      "amount": round(a, 2)}
+        history = [{"year": y, "total": round(t, 2)}
+                   for y, t in sorted(yearly.items())]
+        return (history, latest)
+    except Exception:
+        return ([], None)
+
+
 def build_reason(per, market_per, debt_ratio, profit_status):
     parts = []
     if per is not None and market_per is not None:
@@ -223,6 +256,7 @@ def fetch_stock(entry):
         pass
 
     op_cf, free_cf = get_cashflows(ticker)
+    div_history, latest_div = get_dividend_history(ticker)
     black_years, total_years = get_profit_stability(ticker)
 
     stock = {
@@ -251,6 +285,8 @@ def fetch_stock(entry):
         "profit_years_black": black_years,
         "profit_years_total": total_years,
         "dividend_yield": get_dividend_yield(info, price),
+        "dividend_history": div_history,
+        "latest_dividend": latest_div,
         # 株主優待: 無料APIでは取得不可のため手動管理(tickers.jsonに
         # "yutai": "あり" 等を書いた銘柄のみ値が入る。未記入はnull)
         "shareholder_benefit": entry.get("yutai"),
