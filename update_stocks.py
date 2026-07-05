@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-投資分析アプリ「バーゲンセール」データ更新スクリプト v3.1
+投資分析アプリ「バーゲンセール」データ更新スクリプト v3.2
 v3からの変更点:
   ・配当利回りを追加(年間配当額÷株価で自前計算し、表記ゆれを回避)
   ・株主優待フラグ(tickers.jsonの "yutai" キーをそのまま転記。手動管理)
+v3.1からの変更点:
+  ・業種フラグ(tickers.jsonの "sector" キーを転記。金融業の注記表示に使用)
 """
 
 import json
@@ -227,6 +229,7 @@ def fetch_stock(entry):
         "code": code,
         "name": entry["name"],
         "market": entry.get("market", "prime"),
+        "sector": entry.get("sector"),
         "price": price,
         "open_price": open_price,
         "close_price": close_price,
