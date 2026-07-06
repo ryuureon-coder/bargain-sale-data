@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-投資分析アプリ「バーゲンセール」データ更新スクリプト v3.3
+投資分析アプリ「バーゲンセール」データ更新スクリプト v3.5
 v3からの変更点:
   ・配当利回りを追加(年間配当額÷株価で自前計算し、表記ゆれを回避)
   ・株主優待フラグ(tickers.jsonの "yutai" キーをそのまま転記。手動管理)
@@ -8,6 +8,12 @@ v3.1からの変更点:
   ・業種フラグ(tickers.jsonの "sector" キーを転記。金融業の注記表示に使用)
 v3.2からの変更点:
   ・配当履歴(2019年以降の暦年合算)と直近配当を追加
+v3.3からの変更点:
+  ・時価総額(market_cap)を追加。アプリ側の無料枠判定(時価総額TOP50)に使用
+  ・対象を「日本大型銘柄225」(225銘柄)に拡大
+v3.4からの変更点(v3.5):
+  ・対象を「日本代表300銘柄」に拡大/指数取得を廃止し独自の市場平均
+    (対象銘柄の等加重平均・初週=100)を universe_avg として出力
 """
 
 import json
@@ -268,6 +274,7 @@ def fetch_stock(entry):
         "open_price": open_price,
         "close_price": close_price,
         "per": safe_round(info.get("trailingPE"), 2),
+        "market_cap": safe_round(info.get("marketCap"), 0),
         "debt_ratio": get_debt_ratio(ticker),
         "profit_status": get_profit_status(ticker),
         "revenue_growth": get_revenue_growth(ticker),
@@ -314,15 +321,48 @@ def main():
             print(f"[{i}/{len(tickers)}] NG: {entry['code']} {e}")
         time.sleep(1.5)
 
-    index_histories = {}
-    for key, symbol in [("nikkei", "^N225"), ("topix_etf", "1306.T")]:
-        try:
-            index_histories[key] = get_weekly_history(yf.Ticker(symbol))
-            print(f"指数OK: {key} ({len(index_histories[key])}点)")
-        except Exception as e:
-            index_histories[key] = []
-            print(f"指数NG: {key} {e}")
-        time.sleep(1.5)
+    # 市場平均(独自指標): 対象銘柄の週次騰落率の単純平均(等加重、初週=100)
+    # ※期中上場の銘柄は上場週からの騰落率で参加する
+    ratio_by_date = {}
+    for code, series in histories.items():
+        if len(series) < 2:
+            continue
+        base = series[0]["close"]
+        if not base:
+            continue
+        for p in series:
+            ratio_by_date.setdefault(p["date"], []).append(p["close"] / base)
+    universe_avg = [
+        {"date": d, "close": round(sum(v) / len(v) * 100, 2)}
+        for d, v in sorted(ratio_by_date.items())
+    ]
+    # 市場平均(時価総額加重・参考出力): 現在の時価総額ウェイトを過去にも
+    # 固定適用した近似値。アプリ表示には未使用(将来の切替用の保険)
+    cap_by_code = {s["code"]: s["market_cap"] for s in stocks
+                   if s.get("market_cap")}
+    wsum_by_date = {}
+    cap_by_date = {}
+    for code, series in histories.items():
+        cap = cap_by_code.get(code)
+        if not cap or len(series) < 2:
+            continue
+        base = series[0]["close"]
+        if not base:
+            continue
+        for p in series:
+            d = p["date"]
+            wsum_by_date[d] = wsum_by_date.get(d, 0.0) + p["close"] / base * cap
+            cap_by_date[d] = cap_by_date.get(d, 0.0) + cap
+    universe_cap = [
+        {"date": d, "close": round(wsum_by_date[d] / cap_by_date[d] * 100, 2)}
+        for d in sorted(wsum_by_date) if cap_by_date[d] > 0
+    ]
+
+    index_histories = {
+        "universe_avg": universe_avg,            # 等加重(アプリ表示用)
+        "universe_cap_weighted": universe_cap,   # 時価総額加重(参考)
+    }
+    print(f"市場平均OK: 等加重{len(universe_avg)}点 / 加重{len(universe_cap)}点")
 
     valid_pers = [s["per"] for s in stocks
                   if s["per"] is not None and 0 < s["per"] < 200]
