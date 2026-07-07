@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-投資分析アプリ「バーゲンセール」データ更新スクリプト v3.6
+投資分析アプリ「バーゲンセール」データ更新スクリプト v3.6.1
 v3からの変更点:
   ・配当利回りを追加(年間配当額÷株価で自前計算し、表記ゆれを回避)
   ・株主優待フラグ(tickers.jsonの "yutai" キーをそのまま転記。手動管理)
@@ -15,11 +15,16 @@ v3.4からの変更点(v3.5):
   ・対象を「日本代表300銘柄」に拡大/指数取得を廃止し独自の市場平均
     (対象銘柄の等加重平均・初週=100)を universe_avg として出力
 v3.5からの変更点(v3.6):
-  ・株式分割によるチャート断層を解消。週次終値を splits で遡及調整
-    (auto_adjust=False で生値を取得し、その週より後の分割比率で割って
-     現在の株数基準に揃える)。配当は非調整(実額のまま)を維持。
+  ・株式分割によるチャート断層を解消。週次終値を splits で遡及調整。
+    配当は非調整(実額のまま)を維持。
   ・split_history を出力(2019年以降・日付昇順)。配当カードの
     「N分割後」注記に使用。
+v3.6からの変更点(v3.6.1):
+  ・分割調整を「日付一律 ÷ratio」から「段差検知方式」に修正。
+    yfinance の生 close は銘柄により分割調整済み/未調整が混在するため、
+    日付一律だと調整済み銘柄を二重調整して壊れていた(全分割銘柄で発生)。
+    split 日付付近で実測段差が ~ratio(相対±20%)のときだけ遡及調整する。
+    (28分割銘柄+回帰銘柄を実データ検証済み。しまむら8227の断層解消を確認)
 """
 
 import json
@@ -226,40 +231,88 @@ def build_reason(per, market_per, debt_ratio, profit_status):
     return "＋".join(parts) if parts else "データ不足"
 
 
+def _adjust_weekly_splits(series, splits):
+    # 週次終値を分割調整する(段差検知方式)。
+    # yfinance(=Yahoo)の生 close は、銘柄によって「分割調整済み」で返る場合と
+    # 「未調整」で返る場合が混在する(直近の分割ほど未調整で返りやすい)。
+    # そのため日付で一律に ÷ratio すると、調整済みの銘柄を二重調整して壊す。
+    # → split 日付付近で「実測の段差が ~ratio か」を検知し、未調整のときだけ
+    #   その段差より前の週を ÷ratio して現在株数基準に揃える。調整済みは不触。
+    # series: [{"date","close"}] 昇順(生値) / splits: [(date_str, ratio), ...]
+    if not series or not splits:
+        return series
+    closes = [p["close"] for p in series]
+    dates = [p["date"] for p in series]
+    n = len(closes)
+    first_date = dates[0]
+    # 新しい分割から順に処理(複数分割の合成に対応)
+    in_win = sorted(
+        [(d, r) for (d, r) in splits if r and r > 0 and d >= first_date],
+        key=lambda x: x[0], reverse=True,
+    )
+    for d, r in in_win:
+        # ex-date 以降の最初の週(おおよその境界位置)
+        b0 = next((i for i, dt in enumerate(dates) if dt >= d), n)
+        # 窓 ±3 bars 内で obs が r に最も近い段差を argmin で選ぶ(first-match でなく)。
+        # 相対±20%以内のときだけ「未調整」と判定。r=2 の通常下落(obs~1.22)は
+        # 相対0.39 で弾かれる。逆分割(r<1)も expected obs=r なので同式で整合。
+        # ※r が 1 に極めて近い分割(例 r=1.3)は通常変動と区別しづらく誤検知余地あり
+        #   (現ユニバースの r<1.8 分割は全て 1 年窓外のため実害なし)。
+        lo = max(1, b0 - 3)
+        hi = min(n - 1, b0 + 3)
+        boundary = -1
+        best_rel = float("inf")
+        for i in range(lo, hi + 1):
+            if closes[i] and closes[i - 1]:
+                obs = closes[i - 1] / closes[i]
+                rel = abs(obs - r) / r
+                if rel < best_rel:
+                    best_rel = rel
+                    boundary = i
+        if best_rel > 0.20:
+            boundary = -1
+        if boundary == -1:
+            continue  # 段差なし=既に調整済み→触らない
+        for i in range(boundary):
+            closes[i] = closes[i] / r
+    return [{"date": dates[i], "close": closes[i]} for i in range(n)]
+
+
 def get_weekly_history(ticker_obj):
     # 週次終値を分割調整して返す(Case B: 手動遡及調整)。
-    # auto_adjust=False で生の終値を取得し、各週の終値を「その週より後」に
-    # 起きた分割の比率で割って、現在の株数基準に揃える。配当は非調整。
+    # auto_adjust=False で生の終値を取得し、_adjust_weekly_splits で
+    # 段差検知して現在株数基準に揃える。配当は非調整(実額のまま)。
     try:
         hist = ticker_obj.history(period="1y", interval="1wk", auto_adjust=False)
         if hist is None or hist.empty:
             return []
-        try:
-            splits = ticker_obj.splits
-        except Exception:
-            splits = None
-        has_splits = splits is not None and len(splits) > 0
-        result = []
+        raw = []
         for date, row in hist.iterrows():
             close = row.get("Close")
             if close is None or str(close) == "nan":
                 continue
-            adj = float(close)
-            if has_splits:
-                for sdate, ratio in splits.items():
+            raw.append({
+                "date": date.strftime("%Y-%m-%d"),
+                "close": float(close),
+            })
+        # 分割イベント(日付文字列, 比率)。併合(逆分割・r<1)もそのまま渡す。
+        splits = []
+        try:
+            sp = ticker_obj.splits
+            if sp is not None and len(sp) > 0:
+                for sdate, ratio in sp.items():
                     try:
                         r = float(ratio)
                     except (TypeError, ValueError):
                         continue
-                    # tz差でコケないよう .date() 同士で比較。
-                    # 併合(逆分割・r<1)も同じ式で整合する(÷0.5 = ×2)。
-                    if r > 0 and sdate.date() > date.date():
-                        adj = adj / r
-            result.append({
-                "date": date.strftime("%Y-%m-%d"),
-                "close": round(adj, 1),
-            })
-        return result
+                    splits.append((sdate.strftime("%Y-%m-%d"), r))
+        except Exception:
+            splits = []
+        adjusted = _adjust_weekly_splits(raw, splits)
+        return [
+            {"date": p["date"], "close": round(p["close"], 1)}
+            for p in adjusted
+        ]
     except Exception:
         return []
 
