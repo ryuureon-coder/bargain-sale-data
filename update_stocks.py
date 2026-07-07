@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-投資分析アプリ「バーゲンセール」データ更新スクリプト v3.5
+投資分析アプリ「バーゲンセール」データ更新スクリプト v3.6
 v3からの変更点:
   ・配当利回りを追加(年間配当額÷株価で自前計算し、表記ゆれを回避)
   ・株主優待フラグ(tickers.jsonの "yutai" キーをそのまま転記。手動管理)
@@ -14,6 +14,12 @@ v3.3からの変更点:
 v3.4からの変更点(v3.5):
   ・対象を「日本代表300銘柄」に拡大/指数取得を廃止し独自の市場平均
     (対象銘柄の等加重平均・初週=100)を universe_avg として出力
+v3.5からの変更点(v3.6):
+  ・株式分割によるチャート断層を解消。週次終値を splits で遡及調整
+    (auto_adjust=False で生値を取得し、その週より後の分割比率で割って
+     現在の株数基準に揃える)。配当は非調整(実額のまま)を維持。
+  ・split_history を出力(2019年以降・日付昇順)。配当カードの
+    「N分割後」注記に使用。
 """
 
 import json
@@ -221,19 +227,64 @@ def build_reason(per, market_per, debt_ratio, profit_status):
 
 
 def get_weekly_history(ticker_obj):
+    # 週次終値を分割調整して返す(Case B: 手動遡及調整)。
+    # auto_adjust=False で生の終値を取得し、各週の終値を「その週より後」に
+    # 起きた分割の比率で割って、現在の株数基準に揃える。配当は非調整。
     try:
-        hist = ticker_obj.history(period="1y", interval="1wk")
+        hist = ticker_obj.history(period="1y", interval="1wk", auto_adjust=False)
         if hist is None or hist.empty:
             return []
+        try:
+            splits = ticker_obj.splits
+        except Exception:
+            splits = None
+        has_splits = splits is not None and len(splits) > 0
         result = []
         for date, row in hist.iterrows():
             close = row.get("Close")
             if close is None or str(close) == "nan":
                 continue
+            adj = float(close)
+            if has_splits:
+                for sdate, ratio in splits.items():
+                    try:
+                        r = float(ratio)
+                    except (TypeError, ValueError):
+                        continue
+                    # tz差でコケないよう .date() 同士で比較。
+                    # 併合(逆分割・r<1)も同じ式で整合する(÷0.5 = ×2)。
+                    if r > 0 and sdate.date() > date.date():
+                        adj = adj / r
             result.append({
                 "date": date.strftime("%Y-%m-%d"),
-                "close": round(float(close), 1),
+                "close": round(adj, 1),
             })
+        return result
+    except Exception:
+        return []
+
+
+def get_split_history(ticker_obj, since_year=2019):
+    # 株式分割の履歴(2019年以降・日付昇順)を返す。
+    # 形式: [{"date": "2026-02-21", "ratio": 3.0}, ...]
+    # 用途: アプリ配当カードの「N分割後」注記。
+    try:
+        splits = ticker_obj.splits
+        if splits is None or len(splits) == 0:
+            return []
+        result = []
+        for sdate, ratio in splits.items():
+            try:
+                r = float(ratio)
+            except (TypeError, ValueError):
+                continue
+            if r <= 0 or sdate.year < since_year:
+                continue
+            result.append({
+                "date": sdate.strftime("%Y-%m-%d"),
+                "ratio": round(r, 4),
+            })
+        result.sort(key=lambda x: x["date"])
         return result
     except Exception:
         return []
@@ -297,6 +348,8 @@ def fetch_stock(entry):
         # 株主優待: 無料APIでは取得不可のため手動管理(tickers.jsonに
         # "yutai": "あり" 等を書いた銘柄のみ値が入る。未記入はnull)
         "shareholder_benefit": entry.get("yutai"),
+        # 株式分割履歴(2019年以降・昇順)。配当カードの「N分割後」注記用。
+        "split_history": get_split_history(ticker),
     }
     weekly = get_weekly_history(ticker)
     return stock, weekly
