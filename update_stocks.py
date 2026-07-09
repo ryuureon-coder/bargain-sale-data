@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-投資分析アプリ「バーゲンセール」データ更新スクリプト v3.6.1
+投資分析アプリ「バーゲンセール」データ更新スクリプト v3.7
 v3からの変更点:
   ・配当利回りを追加(年間配当額÷株価で自前計算し、表記ゆれを回避)
   ・株主優待フラグ(tickers.jsonの "yutai" キーをそのまま転記。手動管理)
@@ -25,6 +25,13 @@ v3.6からの変更点(v3.6.1):
     日付一律だと調整済み銘柄を二重調整して壊れていた(全分割銘柄で発生)。
     split 日付付近で実測段差が ~ratio(相対±20%)のときだけ遡及調整する。
     (28分割銘柄+回帰銘柄を実データ検証済み。しまむら8227の断層解消を確認)
+v3.6.1からの変更点(v3.7):
+  ・現在価格 price を get_current_price に分離。従来の
+    ticker.history(period="5d") が run毎に空を返し price が虫食い/全滅
+    していた不具合を修正。主=fast_info.last_price、副=日次履歴の最終終値
+    の2段取得(前日終値は price に混ぜない)。price 依存の dividend_yield も
+    連鎖回復。取得内訳を [price] 行でログ出力(silent null をやめる)。
+    (全300銘柄を chart API で実測: regularMarketPrice 充足 299/300)
 """
 
 import json
@@ -343,6 +350,70 @@ def get_split_history(ticker_obj, since_year=2019):
         return []
 
 
+def get_current_price(ticker_obj):
+    """現在価格を返す (price, open_price, close_price, source)。
+
+    旧実装の ticker.history(period="5d") は run毎に空DataFrameを返す不具合が
+    あり price が虫食い/全滅していた。同じ chart エンドポイントでも
+    fast_info(=軽量・最新約定値)と日次履歴は安定して取れる実測結果に基づき、
+      主: fast_info.last_price(最も新鮮・場中は当日値、場後は当日終値)
+      副: 日次履歴 period="1mo" の最終有効終値(同じ chart 経路・堅い)
+    の2段で取得する。前日終値(previous_close)は price には混ぜない
+    (「昨日の値が現在値に化ける」事故防止)。close_price 欄にのみ入れる。
+    どちらも取れなければ price=None(銘柄自体は落とさない)。
+    """
+    price = open_price = prev_close = None
+    source = "none"
+
+    # 主: fast_info(chartエンドポイント・認証系を通らず throttle に強い)
+    try:
+        fi = ticker_obj.fast_info
+        lp = fi.last_price
+        if lp is not None and float(lp) == float(lp) and float(lp) > 0:
+            price = float(lp)
+            source = "fast_info"
+            try:
+                op = fi.open
+                if op is not None and float(op) == float(op):
+                    open_price = float(op)
+            except Exception:
+                pass
+            try:
+                pc = fi.previous_close
+                if pc is not None and float(pc) == float(pc):
+                    prev_close = float(pc)
+            except Exception:
+                pass
+    except Exception:
+        pass
+
+    # 副: 日次履歴の最終有効終値(auto_adjust=False=実額)
+    if price is None:
+        try:
+            h = ticker_obj.history(period="1mo", interval="1d",
+                                   auto_adjust=False)
+            if h is not None and not h.empty and "Close" in h:
+                h = h.dropna(subset=["Close"])
+                if len(h) > 0:
+                    last = h.iloc[-1]  # price/open は同一行から取る(日付ズレ防止)
+                    price = float(last["Close"])
+                    source = "daily_hist"
+                    op = last.get("Open")
+                    if op is not None and float(op) == float(op):
+                        open_price = float(op)
+                    if len(h) > 1:
+                        prev_close = float(h["Close"].iloc[-2])
+        except Exception:
+            pass
+
+    return (
+        safe_round(price, 1),
+        safe_round(open_price, 1),
+        safe_round(prev_close, 1),
+        source,
+    )
+
+
 def fetch_stock(entry):
     code = entry["code"]
     symbol = f"{code}.T"
@@ -354,16 +425,8 @@ def fetch_stock(entry):
     except Exception:
         pass
 
-    price = open_price = close_price = None
-    try:
-        hist = ticker.history(period="5d")
-        if hist is not None and not hist.empty:
-            last_row = hist.iloc[-1]
-            open_price = safe_round(last_row.get("Open"), 1)
-            close_price = safe_round(last_row.get("Close"), 1)
-            price = close_price
-    except Exception:
-        pass
+    # 現在価格(price は当日/最新約定値のみ。前日終値は close_price 欄止まり)
+    price, open_price, close_price, price_source = get_current_price(ticker)
 
     op_cf, free_cf = get_cashflows(ticker)
     div_history, latest_div = get_dividend_history(ticker)
@@ -405,7 +468,7 @@ def fetch_stock(entry):
         "split_history": get_split_history(ticker),
     }
     weekly = get_weekly_history(ticker)
-    return stock, weekly
+    return stock, weekly, price_source
 
 
 def main():
@@ -415,17 +478,29 @@ def main():
     stocks = []
     histories = {}
     errors = []
+    price_sources = {"fast_info": 0, "daily_hist": 0, "none": 0}
+    price_missing = []  # price を取得できなかった銘柄(銘柄自体は残す)
 
     for i, entry in enumerate(tickers, start=1):
         try:
-            stock, weekly = fetch_stock(entry)
+            stock, weekly, price_source = fetch_stock(entry)
             stocks.append(stock)
             histories[entry["code"]] = weekly
-            print(f"[{i}/{len(tickers)}] OK: {entry['code']} {entry['name']}")
+            price_sources[price_source] = price_sources.get(price_source, 0) + 1
+            if stock["price"] is None:
+                price_missing.append(entry["code"])
+            print(f"[{i}/{len(tickers)}] OK: {entry['code']} {entry['name']} "
+                  f"price={stock['price']}({price_source})")
         except Exception as e:
             errors.append({"code": entry["code"], "error": str(e)})
             print(f"[{i}/{len(tickers)}] NG: {entry['code']} {e}")
         time.sleep(1.5)
+
+    # 価格取得の内訳を可視化(silent null を残さない)
+    print(f"[price] fast_info={price_sources['fast_info']} "
+          f"daily_hist={price_sources['daily_hist']} "
+          f"none={price_sources['none']} / missing={len(price_missing)} "
+          f"{price_missing}")
 
     # 市場平均(独自指標): 対象銘柄の週次騰落率の単純平均(等加重、初週=100)
     # ※期中上場の銘柄は上場週からの騰落率で参加する
