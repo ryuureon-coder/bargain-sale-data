@@ -40,6 +40,26 @@ v3.7からの変更点(v3.8):
     前回コミット済みの正本が生き残る(凍結の可視化はアプリ側の
     鮮度バナー N1 が担う)。書込は temp→os.replace で torn write を防止。
     背景: price全滅事故(2026-07-06〜09)。docs/recurrence-prevention.md 参照。
+v3.8からの変更点(v3.9):
+  ・profit_status / revenue_growth の「NaN列」バグを修正。income_stmt の
+    最新列は、Yahoo が新年度の列を EPS・株式数だけ先に作るため Net Income /
+    Total Revenue が NaN のことがある(2026-07-15 実測で300銘柄中15件)。
+    float(nan) > 0 も float(nan) > prev も False になるため、iloc[:,0] だけを
+    見る旧実装は「黒字を赤字」「増収を減収」と無条件に配信していた
+    (profit_status 13件・revenue_growth 12件。三井不動産・三菱重工など
+    4期連続黒字が"赤字"表示され、スクリーニングからも除外されていた)。
+    NaN 列をスキップして直近の有効期で判定する(get_profit_stability と
+    同じ母集団になり、"red なのに4期中4期黒字"の自己矛盾も解消)。
+    背景: 2026-07-14 data-auditor 監査。present-but-wrong 型の事故。
+  ・同じ「欠損の握りつぶし」を balance_sheet 経路でも修正。get_debt_ratio は
+    Total Debt が NaN のとき 0.0(無借金)を返していた。欠損が"良い評価"に化ける
+    ため上より危険(アプリは無借金銘柄を優先ソートし、財務ラベルも「無借金」になる)。
+    7012 川崎重工は 2022/3期に5,010億円の有利子負債の記録がありながら以降が欠損し、
+    自己資本比率26.4%の重工メーカーが「無借金＋黒字」と表示されていた
+    (2026-07-14 時点では低PER条件を満たさず割安一覧には入っていなかったが、
+    PERが下がれば無借金優先ソートで最上位に出る位置にあった)。
+    影響は debt_ratio 3件(7012→null / 6920 レーザーテック 0→1.8% /
+    6526 ソシオネクスト 0→0.8%)。本物の無借金16社は 0.0 のまま温存される。
 """
 
 import json
@@ -75,24 +95,48 @@ def safe_round(value, digits=1):
 
 
 def get_debt_ratio(ticker):
-    """負債比率 = 有利子負債合計 ÷ 総資産(Total Debt行なし=無借金0.0)"""
+    """負債比率 = 有利子負債合計 ÷ 総資産
+
+    Total Debt が1期も取れない銘柄は、Yahoo が値0の項目を落とすために起きる
+    ことが多く、実際に実質無借金である(キーエンス・任天堂・ファナック等)。
+    従来どおり 0.0(無借金)を返す。
+    一方、過去に有利子負債の実績があるのに最新列だけ NaN の銘柄まで 0.0 にすると、
+    借金のある企業が「無借金」に化ける。欠損が"良い評価"に化ける点で
+    profit_status の NaN 列バグより危険(財務ラベルが「無借金」になり、アプリの
+    無借金優先ソートで一覧上位に押し上げられる)。7012 川崎重工は 2022/3期に
+    5,010億円の記録がありながら以降が欠損し、自己資本比率26.4%の重工メーカーが
+    「無借金＋黒字」と表示されていた(2026-07-15 監査)。
+    よって「有効な Total Debt があるか」で分ける:
+      ・1期も無い     → 0.0(実質無借金とみなす。従来動作)
+      ・有効値がある   → 直近の有効期の値で比率を出す(6920 レーザーテックが
+                        「無借金」→ 実際の1.8%=財務健全に是正される)
+      ・負債はあるが同じ期の総資産が無い → None。負債と総資産で時点の違う比率を
+        でっち上げない(川崎重工がこれ。「無借金」ではなく「データなし」になる)
+    """
     try:
         bs = ticker.balance_sheet
         if bs is None or bs.empty:
             return None
-        latest = bs.iloc[:, 0]
-        total_assets = latest.get("Total Assets")
-        if total_assets is None or float(total_assets) == 0:
+        for col in range(bs.shape[1]):  # 列は日付降順(0=最新)
+            column = bs.iloc[:, col]
+            total_debt = column.get("Total Debt")
+            if total_debt is None or str(total_debt) == "nan":
+                continue
+            total_assets = column.get("Total Assets")
+            if (total_assets is None or str(total_assets) == "nan"
+                    or float(total_assets) == 0):
+                return None  # 同時点の分母が無い → 比率を作れない
+            ratio = float(total_debt) / float(total_assets)
+            if ratio < 0:
+                return None
+            return round(ratio, 3)
+        # Total Debt が1期も無い = 実質無借金とみなす(従来動作)。
+        # ただし総資産すら取れない銘柄はデータ品質不明として None にする。
+        total_assets = bs.iloc[:, 0].get("Total Assets")
+        if (total_assets is None or str(total_assets) == "nan"
+                or float(total_assets) == 0):
             return None
-        if "Total Debt" not in bs.index:
-            return 0.0
-        total_debt = latest.get("Total Debt")
-        if total_debt is None or str(total_debt) == "nan":
-            return 0.0
-        ratio = float(total_debt) / float(total_assets)
-        if ratio < 0:
-            return None
-        return round(ratio, 3)
+        return 0.0
     except Exception:
         return None
 
@@ -135,14 +179,23 @@ def get_cashflows(ticker):
 
 
 def get_profit_status(ticker):
+    """直近の「有効な」通期 Net Income の符号で黒字/赤字を返す。
+
+    最新列の Net Income は NaN のことがある(Yahoo が新年度の列を EPS・株式数
+    だけ先に作るため)。float(nan) > 0 は False になるので、iloc[:,0] を素直に
+    見ると黒字企業を "red" として配信してしまう。NaN 列はスキップし、
+    get_profit_stability と同じ母集団(有効な期)で判定する。
+    """
     try:
         fin = ticker.income_stmt
         if fin is None or fin.empty:
             return None
-        net_income = fin.iloc[:, 0].get("Net Income")
-        if net_income is None:
-            return None
-        return "black" if float(net_income) > 0 else "red"
+        for col in range(fin.shape[1]):  # 列は日付降順(0=最新)
+            ni = fin.iloc[:, col].get("Net Income")
+            if ni is None or str(ni) == "nan":
+                continue
+            return "black" if float(ni) > 0 else "red"
+        return None
     except Exception:
         return None
 
@@ -170,15 +223,27 @@ def get_profit_stability(ticker):
 
 
 def get_revenue_growth(ticker):
+    """直近2期の「有効な」Total Revenue を比べて増収/減収を返す。
+
+    get_profit_status と同じ NaN 列問題。float(nan) > float(prev) も False の
+    ため、旧実装は最新列が NaN の銘柄を無条件に "decrease"(減収)と配信して
+    いた。NaN 列はスキップし、有効な直近2期で比較する。
+    """
     try:
         fin = ticker.income_stmt
-        if fin is None or fin.empty or fin.shape[1] < 2:
+        if fin is None or fin.empty:
             return None
-        latest = fin.iloc[:, 0].get("Total Revenue")
-        prev = fin.iloc[:, 1].get("Total Revenue")
-        if latest is None or prev is None or float(prev) == 0:
+        values = []
+        for col in range(fin.shape[1]):  # 列は日付降順(0=最新)
+            rv = fin.iloc[:, col].get("Total Revenue")
+            if rv is None or str(rv) == "nan":
+                continue
+            values.append(float(rv))
+            if len(values) == 2:
+                break
+        if len(values) < 2 or values[1] == 0:
             return None
-        return "increase" if float(latest) > float(prev) else "decrease"
+        return "increase" if values[0] > values[1] else "decrease"
     except Exception:
         return None
 
