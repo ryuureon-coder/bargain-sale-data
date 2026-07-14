@@ -25,6 +25,7 @@ price全滅事故（2026-07-06〜09、fb52f6a で price null 300/300 なのに e
 tests/test_validate_stocks.py（N3・番人の番人）。
 """
 
+import datetime
 import json
 import os
 
@@ -49,11 +50,32 @@ STOCKS_COUNT_MIN_RATIO = 0.90    # スキーマ: stocks 件数 ≥ ticker数×90
 DELTA_WARN_PPT = 10.0            # L2: null率が前日比 +10ppt 超で warn
 DELTA_FAIL_PPT = 30.0            # L2: +30ppt 超で fail（対象は DELTA_FAIL_FIELDS のみ）
 DELTA_FAIL_FIELDS = ("price", "market_cap")
-DELTA_WATCH_FIELDS = ("price", "market_cap", "per", "pbr", "dividend_yield", "roe")
+DELTA_WATCH_FIELDS = ("price", "market_cap", "per", "pbr", "dividend_yield",
+                      "roe", "eps", "debt_ratio", "profit_status")
+
+# 絶対充足率フロア（warn）。前日比(L2)だけでは「毎日+9pptずつ」のじわじわ劣化を
+# 永久に見逃す（ベースラインが毎日ずれていくため）。ドリフトしない絶対値の網を張る。
+# 2026-07-14 実測の充足率は peg 90.0% が最低で他は 94.7〜99.7% → フロア70%は
+# 通常運用で誤発火せず、「半分以上壊れた」状態を確実に捕らえる。
+# fail にはしない（price/market_cap 以外の欠落は配信を止めるほどではない＝N5対策）。
+COVERAGE_WARN_MIN = 0.70
+COVERAGE_WARN_FIELDS = ("per", "pbr", "roe", "roa", "psr", "peg", "eps",
+                        "dividend_yield", "debt_ratio", "equity_ratio",
+                        "profit_status", "revenue_growth")
 
 PRICE_JUMP_RATIO = 0.40          # N4: 前日比 ±40% 超の価格変動を「跳び」とみなす
 PRICE_JUMP_SHARE_MAX = 0.05      # N4: 跳び銘柄が全体の 5% 超なら warn
                                  # （個別の跳びは分割・ストップ高安があり得るため黙認）
+
+# ステール（凍結）検知。「取得が失敗して前日の値がそのまま残る」型の破損は、
+# 充足率100%・null増加ゼロ・跳びゼロで**全ゲートを素通り**する（レッドチーム指摘F1）。
+# しかも updated_at だけは新しくなるため、アプリの鮮度バナー(N1)もすり抜ける。
+# 実測: 連続2営業日で価格が前日と完全一致する銘柄は 1.3%（4/299）。
+# ただし cron は祝日も走り東証は休場のため、祝日には正常に ~100% 一致する。
+# → **fail にはせず warn 止まり**（正常な休場日に全配信を止めない）。
+STALE_PRICE_SHARE = 0.95         # 価格が前日と同一の銘柄が95%超なら warn
+UNIVERSE_AVG_FLAT_POINTS = 3     # universe_avg の末尾N点が全て同値なら warn
+HISTORY_MAX_LAG_DAYS = 14        # 週次履歴の最終日が updated_at から14日以上前なら warn
 
 REPORT_MD = "validation_report.md"
 REPORT_JSON = "validation_report.json"
@@ -101,13 +123,49 @@ def _is_valid(field, value):
     return value is not None
 
 
+def _code_of(stock):
+    """銘柄コードを文字列で返す。None/非文字列(list等)は None（＝不正コード）。
+
+    code は quarantine の sorted() や集合演算のキーになるため、None や
+    非hashable型が紛れると validator 自身が TypeError で落ちる（＝番人が死ぬ）。
+    ここで正規化し、不正コードは呼び出し側が fail として扱う。
+    """
+    code = stock.get("code")
+    if isinstance(code, str) and code:
+        return code
+    if isinstance(code, int) and not isinstance(code, bool):
+        return str(code)
+    return None
+
+
 def _coverage(stocks, field):
     """field が有効値の割合と、無効な銘柄コード一覧を返す"""
     if not stocks:
         return 0.0, []
-    missing = [s.get("code") for s in stocks
+    missing = [_code_of(s) for s in stocks
                if not _is_valid(field, s.get(field))]
-    return 1.0 - len(missing) / len(stocks), missing
+    return 1.0 - len(missing) / len(stocks), [c for c in missing if c]
+
+
+def _days_between(date_a, date_b):
+    """"YYYY-MM-DD" 2つの日数差（b - a）。パース不能なら 0（検査をスキップ）"""
+    try:
+        ya, ma, da = (int(x) for x in date_a.split("-"))
+        yb, mb, db = (int(x) for x in date_b.split("-"))
+        return (datetime.date(yb, mb, db) - datetime.date(ya, ma, da)).days
+    except (AttributeError, TypeError, ValueError):
+        return 0
+
+
+def _series_is_valid(series):
+    """週次履歴の系列が「使える構造か」。空・非list・要素が {date,close} でない
+    ものは無効。truthy 判定だけだと、floatの裸リストや dict でも通ってしまい、
+    アプリ側で p["close"] が落ちる形の破損を素通りさせる（レッドチーム指摘F5）。"""
+    if not isinstance(series, list) or not series:
+        return False
+    last = series[-1]
+    return (isinstance(last, dict) and isinstance(last.get("date"), str)
+            and _num(last.get("close")) is not None)
 
 
 # validate() の prev_stocks_doc 省略時の番兵。
@@ -182,6 +240,15 @@ def validate(stocks_doc, market_doc, history_doc, tickers,
             FAIL, "schema_count",
             f"stocks 件数 {len(stocks)} がticker数 {n_tickers} の90%未満"))
 
+    # code が使えない銘柄は quarantine/集合演算のキーを壊す（＝番人が死ぬ）ため、
+    # 検査対象から外したうえで fail にする
+    bad_code = [s for s in stocks if _code_of(s) is None]
+    if bad_code:
+        findings.append(_finding(
+            FAIL, "schema_code",
+            f"code が無い/文字列でない銘柄が {len(bad_code)} 件"))
+        stocks = [s for s in stocks if _code_of(s) is not None]
+
     # ---- L1 絶対フロア ----
     price_cov, price_missing = _coverage(stocks, "price")
     stats["price_coverage"] = round(price_cov * 100, 1)
@@ -207,6 +274,17 @@ def validate(stocks_doc, market_doc, history_doc, tickers,
             FAIL, "valid_per_count",
             f"有効PER件数 {len(valid_pers)} < フロア {VALID_PER_MIN}"))
 
+    # 主要指標の絶対充足率フロア（warn）。前日比(L2)はベースラインが毎日ずれるため
+    # 「毎日+9pptずつ」の劣化を永久に見逃す。ドリフトしない絶対値で網を張る。
+    for field in COVERAGE_WARN_FIELDS:
+        cov, missing = _coverage(stocks, field)
+        stats[f"{field}_coverage"] = round(cov * 100, 1)
+        if cov < COVERAGE_WARN_MIN:
+            findings.append(_finding(
+                WARN, f"coverage_{field}",
+                f"{field} 充足率 {cov*100:.1f}% < フロア"
+                f" {COVERAGE_WARN_MIN*100:.0f}%（欠落 {len(missing)}件）"))
+
     market_per = market_doc.get("market_per")
     stats["market_per"] = market_per if _num(market_per) is not None else None
     if market_per is None:
@@ -219,13 +297,27 @@ def validate(stocks_doc, market_doc, history_doc, tickers,
             WARN, "sanity_market_per",
             f"market_per {market_per} が常識帯 {MARKET_PER_RANGE} の外"))
 
+    # 週次履歴は「非空」ではなく「構造として使えるか」で数える（F5）
     hist_stocks = history_doc["stocks"]
-    non_empty = sum(1 for v in hist_stocks.values() if v)
-    stats["history_non_empty"] = non_empty
-    if non_empty < n_tickers * HISTORY_COVERAGE_MIN:
+    valid_series = [v for v in hist_stocks.values() if _series_is_valid(v)]
+    stats["history_non_empty"] = len(valid_series)
+    if len(valid_series) < n_tickers * HISTORY_COVERAGE_MIN:
         findings.append(_finding(
             FAIL, "history_coverage",
-            f"週次履歴が非空の銘柄 {non_empty} < ticker数{n_tickers}×90%"))
+            f"週次履歴が有効な銘柄 {len(valid_series)} < ticker数{n_tickers}×90%"))
+
+    # 履歴の鮮度: 最終週が updated_at から離れすぎていたら、履歴生成が止まっている
+    # （market/history には前日比較の機構が無いため、絶対時刻でしか気づけない・F4）
+    last_dates = [s[-1]["date"] for s in valid_series]
+    if last_dates:
+        newest = max(last_dates)
+        stats["history_last_date"] = newest
+        asof = str(stocks_doc.get("updated_at", ""))[:10]
+        if asof and _days_between(newest, asof) > HISTORY_MAX_LAG_DAYS:
+            findings.append(_finding(
+                WARN, "stale_history",
+                f"週次履歴の最終日 {newest} が updated_at({asof}) から"
+                f" {HISTORY_MAX_LAG_DAYS}日以上前（履歴の更新が止まっている疑い）"))
 
     universe_avg = history_doc["indexes"]["universe_avg"]
     stats["universe_avg_points"] = len(universe_avg)
@@ -244,6 +336,17 @@ def validate(stocks_doc, market_doc, history_doc, tickers,
                 WARN, "sanity_universe_avg",
                 f"universe_avg 最終点 {last} が正気の帯域"
                 f" {UNIVERSE_AVG_LAST_RANGE} の外"))
+        # 300銘柄の等加重平均が数週連続で小数第2位まで一致することは実質あり得ない
+        # → 指数計算が凍結している（F4）
+        tail = [_num(p.get("close")) for p in
+                universe_avg[-UNIVERSE_AVG_FLAT_POINTS:]
+                if isinstance(p, dict)]
+        if (len(tail) == UNIVERSE_AVG_FLAT_POINTS
+                and len(set(tail)) == 1 and tail[0] is not None):
+            findings.append(_finding(
+                WARN, "stale_universe_avg",
+                f"universe_avg の末尾{UNIVERSE_AVG_FLAT_POINTS}点が全て同値"
+                f"（{tail[0]}）＝指数計算が凍結している疑い"))
 
     # ---- L2 前日比回帰（フラッピング捕捉）----
     prev_stocks = None
@@ -258,8 +361,8 @@ def validate(stocks_doc, market_doc, history_doc, tickers,
             WARN, "delta_baseline",
             "前日データが無い/読めないため前日比回帰をスキップ（初回 or 破損）"))
     else:
-        new_codes = {s.get("code") for s in stocks}
-        prev_codes = {s.get("code") for s in prev_stocks}
+        new_codes = {_code_of(s) for s in stocks}
+        prev_codes = {_code_of(s) for s in prev_stocks if _code_of(s)}
         universe_changed = new_codes != prev_codes
         if universe_changed:
             findings.append(_finding(
@@ -286,25 +389,40 @@ def validate(stocks_doc, market_doc, history_doc, tickers,
                     f"{field} の null/無効率 {prev_rate:.1f}%→{new_rate:.1f}%"
                     f"（+{delta_ppt:.1f}ppt）"))
 
-        # ---- N4 値サニティ: price の前日比跳び（分割二重調整・ステールキャッシュ狙い）----
-        prev_price = {s.get("code"): _num(s.get("price"))
-                      for s in prev_stocks}
+        # ---- N4 値サニティ: price の前日比（跳び＝分割二重調整／不動＝ステール）----
+        prev_price = {_code_of(s): _num(s.get("price")) for s in prev_stocks
+                      if _code_of(s)}
         jumped = []
+        unchanged = 0
         compared = 0
         for s in stocks:
             p_new = _num(s.get("price"))
-            p_prev = prev_price.get(s.get("code"))
+            p_prev = prev_price.get(_code_of(s))
             if p_new is not None and p_new > 0 \
                     and p_prev is not None and p_prev > 0:
                 compared += 1
                 if abs(p_new / p_prev - 1) > PRICE_JUMP_RATIO:
-                    jumped.append(s.get("code"))
+                    jumped.append(_code_of(s))
+                if p_new == p_prev:
+                    unchanged += 1
         stats["price_jumped"] = len(jumped)
         if compared > 0 and len(jumped) / compared > PRICE_JUMP_SHARE_MAX:
             findings.append(_finding(
                 WARN, "sanity_price_jump",
                 f"前日比±{PRICE_JUMP_RATIO*100:.0f}%超の価格変動が"
                 f" {len(jumped)}/{compared}銘柄（>5%）: {jumped[:20]}"))
+
+        # ステール（凍結）検知: 「取得失敗で前日の値が居座る」型の破損は充足率100%・
+        # null増加ゼロで全ゲートを素通りする（レッドチーム指摘F1）。実測では連続2営業日で
+        # 価格が完全一致する銘柄は1.3%しかない。ただし祝日は東証が休場でも cron は走る
+        # ため正常に~100%一致する → **warnのみ**（正常な休場日に配信を止めない）。
+        stats["price_unchanged"] = unchanged
+        if compared > 0 and unchanged / compared > STALE_PRICE_SHARE:
+            findings.append(_finding(
+                WARN, "stale_price",
+                f"価格が前日と完全に同一の銘柄が {unchanged}/{compared}"
+                f"（>{STALE_PRICE_SHARE*100:.0f}%）＝取得が失敗して前日値が"
+                f"居座っている疑い（祝日=東証休場なら正常）"))
 
     # ---- quarantine（Phase1はレポート列挙のみ。data_quality出力=L4はPhase2）----
     quarantine = sorted(set(price_missing) | set(cap_missing))
