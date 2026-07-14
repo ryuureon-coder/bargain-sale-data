@@ -32,14 +32,25 @@ v3.6.1からの変更点(v3.7):
     の2段取得(前日終値は price に混ぜない)。price 依存の dividend_yield も
     連鎖回復。取得内訳を [price] 行でログ出力(silent null をやめる)。
     (全300銘柄を chart API で実測: regularMarketPrice 充足 299/300)
+v3.7からの変更点(v3.8):
+  ・再発防止 Phase 1(L1受け入れ検査ブレーカ)。main() を
+    「生成→検証→合格時のみアトミック書込」に再構成。
+    検証は validate_stocks.py(ok/warn/fail の3層)。fail 時はファイルを
+    一切上書きせず exit(1) → update.yml の notify ジョブが Issue 起票。
+    前回コミット済みの正本が生き残る(凍結の可視化はアプリ側の
+    鮮度バナー N1 が担う)。書込は temp→os.replace で torn write を防止。
+    背景: price全滅事故(2026-07-06〜09)。docs/recurrence-prevention.md 参照。
 """
 
 import json
+import sys
 import time
 import statistics
 from datetime import datetime, timezone, timedelta
 
 import yfinance as yf
+
+import validate_stocks
 
 INPUT_FILE = "tickers.json"
 STOCKS_OUTPUT = "stocks.json"
@@ -396,13 +407,18 @@ def get_current_price(ticker_obj):
                 h = h.dropna(subset=["Close"])
                 if len(h) > 0:
                     last = h.iloc[-1]  # price/open は同一行から取る(日付ズレ防止)
-                    price = float(last["Close"])
-                    source = "daily_hist"
-                    op = last.get("Open")
-                    if op is not None and float(op) == float(op):
-                        open_price = float(op)
-                    if len(h) > 1:
-                        prev_close = float(h["Close"].iloc[-2])
+                    c = float(last["Close"])
+                    # 0以下は取引停止・データ源異常とみなし不採用(主経路と同じ
+                    # 正値チェック)。0.0 が price として配信されると null と違い
+                    # 受け入れ検査もアプリの非表示分岐も素通りするため(監査指摘)。
+                    if c == c and c > 0:
+                        price = c
+                        source = "daily_hist"
+                        op = last.get("Open")
+                        if op is not None and float(op) == float(op):
+                            open_price = float(op)
+                        if len(h) > 1:
+                            prev_close = float(h["Close"].iloc[-2])
         except Exception:
             pass
 
@@ -555,30 +571,66 @@ def main():
 
     now = datetime.now(JST).strftime("%Y-%m-%d %H:%M:%S")
 
-    with open(STOCKS_OUTPUT, "w", encoding="utf-8") as f:
-        json.dump({"updated_at": now, "stocks": stocks, "errors": errors},
-                  f, ensure_ascii=False, indent=2)
+    stocks_doc = {"updated_at": now, "stocks": stocks, "errors": errors}
+    market_doc = {
+        "updated_at": now,
+        "market_per": market_per,
+        # 公式の日経平均PER/TOPIX PERは無料データ源では取得不可のため
+        # 本アプリでは市場PER(対象銘柄の中央値)を基準値として使用する
+        "nikkei_per": None,
+        "topix_per": None,
+    }
+    history_doc = {
+        "updated_at": now,
+        "interval": "1wk",
+        "period": "1y",
+        "indexes": index_histories,
+        "stocks": histories,
+    }
 
-    with open(MARKET_OUTPUT, "w", encoding="utf-8") as f:
-        json.dump({
-            "updated_at": now,
-            "market_per": market_per,
-            # 公式の日経平均PER/TOPIX PERは無料データ源では取得不可のため
-            # 本アプリでは市場PER(対象銘柄の中央値)を基準値として使用する
-            "nikkei_per": None,
-            "topix_per": None,
-        }, f, ensure_ascii=False, indent=2)
+    # ---- L1/L2/N4: 配信前の受け入れ検査(再発防止 Phase 1) ----
+    # 前日比較のベースラインは「コミット済みの現行 stocks.json」。
+    # 初回や破損時は None → validate 側が warn を記録して回帰をスキップする。
+    prev_doc = None
+    try:
+        with open(STOCKS_OUTPUT, encoding="utf-8") as f:
+            prev_doc = json.load(f)
+    except (OSError, ValueError):
+        prev_doc = None
 
-    with open(HISTORY_OUTPUT, "w", encoding="utf-8") as f:
-        json.dump({
-            "updated_at": now,
-            "interval": "1wk",
-            "period": "1y",
-            "indexes": index_histories,
-            "stocks": histories,
-        }, f, ensure_ascii=False, indent=2)
+    try:
+        report = validate_stocks.validate(
+            stocks_doc, market_doc, history_doc, tickers, prev_doc)
+    except Exception as e:  # 番人自身が死んでも fail-closed(配信停止)にする
+        # 未捕捉例外で落ちると「どのゲートが・何%で」の情報が通知に載らないため、
+        # 例外内容を含む fail レポートを組み立ててから exit(1) する(監査指摘)。
+        report = {
+            "level": validate_stocks.FAIL,
+            "findings": [{"level": validate_stocks.FAIL,
+                          "check": "validator_crash",
+                          "message": f"validator が例外で停止: {e!r}"}],
+            "stats": {},
+            "quarantine": [],
+        }
+    validate_stocks.write_report_files(report)
+    print(validate_stocks.render_report_md(report))
 
-    print(f"完了: {len(stocks)}銘柄 / エラー{len(errors)}件 / 市場PER: {market_per}")
+    # サーキットブレーカ。fail なら1バイトも書かずに異常終了し、前回の正本を
+    # 生き残らせる → update.yml の notify ジョブが Issue を起票する。
+    # ブレーカは"承認者"ではない——沈黙を破って人間の観測を呼ぶ装置(設計書P1)。
+    # 書込みは必ずこの publish() を通す(直接 open(...,"w") を足すと事故前の
+    # 「無条件write」に先祖返りする)。
+    published = validate_stocks.publish(report, [
+        (STOCKS_OUTPUT, stocks_doc),
+        (MARKET_OUTPUT, market_doc),
+        (HISTORY_OUTPUT, history_doc),
+    ])
+    if not published:
+        print("検証FAIL: 配信を停止しました(ファイルは上書きしていません)")
+        sys.exit(1)
+
+    print(f"完了({report['level']}): {len(stocks)}銘柄 / エラー{len(errors)}件"
+          f" / 市場PER: {market_per}")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,10 @@
+# 検証レポート(CIのjob output/Issue本文に載せる一時成果物。コミットしない)
+validation_report.md
+validation_report.json
+
+# Python
+__pycache__/
+*.pyc
+
+# アトミック書込の一時ファイル(クラッシュ時に残り得る)
+*.json.tmp
